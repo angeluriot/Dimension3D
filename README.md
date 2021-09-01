@@ -25,14 +25,14 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 	* [Simplified OpenGL objects](#simplified-opengl-objects-)
 	* [Utils](#utils-)
 * **[Install](#install)**
-	* [Dependecies]()
-		* [Compilers]()
-		* [Libraries]()
-	* [Integrating into your project]() *(not recommended)*
-	* [Using the skeleton project]() *(recommended)*
+	* [Dependecies](#dependecies)
+		* [Compilers](#compilers-)
+		* [Libraries](#libraries-)
+	* [Integrating into your project](#integrating-into-your-project-not-recommended) *(not recommended)*
+	* [Using the skeleton project](#using-the-skeleton-project-recommended) *(recommended)*
 * **[Demo](#demo)**
-	* [Code example]()
-	* [Release]()
+	* [Code example](#code-example)
+	* [Release](#release)
 * **[Wiki](#wiki)**
 * **[Notes](#notes)**
 * **[Credits](#credits)**
@@ -118,66 +118,66 @@ Be careful to keep a structure similar to the one shown here :
 
 int main()
 {
-	dim::Window::open("App", 0.75f);
-	dim::Scene scene("Scene");
+    dim::Window::open("App", 0.75f);
+    dim::Scene scene("Scene");
 
-	// Camera
-	scene.set_controller(dim::OrbitController());
+    // Camera
+    scene.set_controller(dim::OrbitController());
 
-	dim::PerspectiveCamera cam;
-	cam.set_position(dim::Vector3(0.f, 0.f, 3.f));
-	scene.set_camera(cam);
+    dim::PerspectiveCamera cam;
+    cam.set_position(dim::Vector3(0.f, 0.f, 3.f));
+    scene.set_camera(cam);
 
-	// Lights
-	scene.add_light(dim::DirectionalLight(dim::Vector3(-1.f, -1.f, -1.f), dim::Color(1.f, 1.f, 1.f)));
+    // Lights
+    scene.add_light(dim::DirectionalLight(dim::Vector3(-1.f, -1.f, -1.f), dim::Color(1.f, 1.f, 1.f)));
 
-	// Objects
-	dim::Object object_1(dim::Mesh::Sphere(256, 256), dim::Material(dim::Color(1.f, 0.1f, 0.1f), 0.1f, 0.5f, 0.6f, 30.f));
+    // Objects
+    dim::Object object_1(dim::Mesh::Sphere(256, 256), dim::Material(dim::Color(1.f, 0.1f, 0.1f), 0.1f, 0.5f, 0.6f, 30.f));
 
-	dim::Object object_2(dim::Mesh::Cone(256), dim::Material(dim::Color(0.1f, 1.f, 0.1f), 0.1f, 0.5f, 0.6f, 30.f));
-	object_2.move(dim::Vector3(1.1f, 0.f, 0.f));
+    dim::Object object_2(dim::Mesh::Cone(256), dim::Material(dim::Color(0.1f, 1.f, 0.1f), 0.1f, 0.5f, 0.6f, 30.f));
+    object_2.move(dim::Vector3(1.1f, 0.f, 0.f));
 
-	dim::Object object_3(dim::Mesh::Cylinder(256), dim::Material(dim::Color(0.1f, 0.1f, 1.f), 0.1f, 0.5f, 0.6f, 30.f));
-	object_3.move(dim::Vector3(-1.1f, 0.f, 0.f));
+    dim::Object object_3(dim::Mesh::Cylinder(256), dim::Material(dim::Color(0.1f, 0.1f, 1.f), 0.1f, 0.5f, 0.6f, 30.f));
+    object_3.move(dim::Vector3(-1.1f, 0.f, 0.f));
 
-	// Buttons info
-	float color[4] = { 1.f, 1.f, 1.f, 1.f };
+    // Buttons info
+    float color[4] = { 1.f, 1.f, 1.f, 1.f };
 
-	// Main loop
-	while (dim::Window::running)
+    // Main loop
+    while (dim::Window::running)
 	{
-		// Dimension3D
-		sf::Event sf_event;
-		while (dim::Window::get_window().pollEvent(sf_event))
-		{
-			dim::Window::check_events(sf_event);
-			dim::Scene::check_all_events(sf_event);
-		}
+        // Dimension3D
+        sf::Event sf_event;
+        while (dim::Window::get_window().pollEvent(sf_event))
+        {
+            dim::Window::check_events(sf_event);
+            dim::Scene::check_all_events(sf_event);
+        }
 
-		dim::Window::clear();
-		dim::Scene::clear_all();
+        dim::Window::clear();
+        dim::Scene::clear_all();
 
-		dim::Window::update();
-		dim::Scene::update_all();
+        dim::Window::update();
+        dim::Scene::update_all();
 
-		scene.draw(object_1);
-		scene.draw(object_2);
-		scene.draw(object_3);
+        scene.draw(object_1);
+        scene.draw(object_2);
+        scene.draw(object_3);
 
-		dim::Scene::display_all();
+        dim::Scene::display_all();
 
-		// ImGui
-		ImGui::Begin("Menu");
-		ImGui::Button("Button");
-		ImGui::ColorPicker3("Color picker", color, ImGuiColorEditFlags_PickerHueWheel);
-		ImGui::End();
+        // ImGui
+        ImGui::Begin("Menu");
+        ImGui::Button("Button");
+        ImGui::ColorPicker3("Color picker", color, ImGuiColorEditFlags_PickerHueWheel);
+        ImGui::End();
 
-		// Dimension3D
-		dim::Window::display();
-	}
+        // Dimension3D
+        dim::Window::display();
+    }
 
-	dim::shut_down();
-	return EXIT_SUCCESS;
+    dim::shut_down();
+    return EXIT_SUCCESS;
 }
 ```
 

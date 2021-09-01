@@ -151,20 +151,20 @@ int main()
         while (dim::Window::get_window().pollEvent(sf_event))
         {
             dim::Window::check_events(sf_event);
-            dim::Scene::check_all_events(sf_event);
+            scene.check_events(sf_event);
         }
 
         dim::Window::clear();
-        dim::Scene::clear_all();
+        scene.clear();
 
         dim::Window::update();
-        dim::Scene::update_all();
+        scene.update();
 
         scene.draw(object_1);
         scene.draw(object_2);
         scene.draw(object_3);
 
-        dim::Scene::display_all();
+        scene.display();
 
         // ImGui
         ImGui::Begin("Menu");
@@ -183,7 +183,7 @@ int main()
 
 ### Release
 
-You can also see the **[releases](https://github.com/angeluriot/Graphics_skeleton/releases)** of the **[skeleton project](https://github.com/angeluriot/Graphics_skeleton)** to test a similar code without compiling.
+You can also see the **[releases](https://github.com/angeluriot/Graphics_skeleton/releases)** of the **[skeleton project](https://github.com/angeluriot/Graphics_skeleton)** to test the example code without compiling.
 
 # Wiki
 
@@ -191,8 +191,8 @@ You can also see the **[releases](https://github.com/angeluriot/Graphics_skeleto
 
 # Notes
 
-This is a small project of a single beginner programmer so there may be bugs if you do not use the library as indicated.
+* This is a small project of a single beginner programmer so there may be bugs if you do not use the library as indicated.
 
 # Credits
 
-* [**Angel Uriot**](https://github.com/angeluriot) : Creator of the project.
+* [**Angel Uriot**](https://github.com/angeluriot) : Creator of the library.

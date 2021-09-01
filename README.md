@@ -145,7 +145,7 @@ int main()
 
     // Main loop
     while (dim::Window::running)
-	{
+    {
         // Dimension3D
         sf::Event sf_event;
         while (dim::Window::get_window().pollEvent(sf_event))

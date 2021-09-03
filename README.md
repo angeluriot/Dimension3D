@@ -33,7 +33,7 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 * **[Demo](#demo)**
 	* [Code example](#code-example)
 	* [Release](#release)
-* **[Wiki](#wiki)**
+* **[Documentation](#documentation)**
 * **[Notes](#notes)**
 * **[Credits](#credits)**
 
@@ -148,7 +148,7 @@ int main()
     {
         // Dimension3D
         sf::Event sf_event;
-        while (dim::Window::get_window().pollEvent(sf_event))
+        while (dim::Window::poll_event(sf_event))
         {
             dim::Window::check_events(sf_event);
             scene.check_events(sf_event);
@@ -185,9 +185,9 @@ int main()
 
 You can also see the **[releases](https://github.com/angeluriot/Graphics_skeleton/releases)** of the **[skeleton project](https://github.com/angeluriot/Graphics_skeleton)** to test the example code without compiling.
 
-# Wiki
+# Documentation
 
-
+You can read the documentation by consulting the **[wiki](https://github.com/angeluriot/Dimension3D/wiki)**.
 
 # Notes
 

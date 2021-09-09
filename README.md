@@ -43,15 +43,15 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 
 ### Windows :
 
-* Interactive windows with buttons, sliders... *(see **[ImGui](https://github.com/ocornut/imgui)** for more information)*.
+* Interactive windows with buttons, sliders... *(see **[ImGui](https://github.com/ocornut/imgui)** for more information)*
 
-* Scene windows for display.
+* Scene windows for display
 
 ### 2D :
 
-* Rectangles, circles, custom shapes, images... *(see **[SFML](https://www.sfml-dev.org/)** for more information)* on a scene or the main window.
+* Rectangles, circles, custom shapes, images... *(see **[SFML](https://www.sfml-dev.org/)** for more information)* on a scene or the main window
 
-* A drag controller to move the view with the mouse.
+* A drag controller to move the view with the mouse
 
 ### 3D :
 
@@ -59,11 +59,11 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 
 * Phong materials, Textures...
 
-* Ambient, directional and point lights.
+* Ambient, directional and point lights
 
-* Perspective and orthographic cameras.
+* Perspective and orthographic cameras
 
-* Drag, fly and orbit controllers.
+* Drag, fly and orbit controllers
 
 ### Simplified OpenGL objects :
 
@@ -80,18 +80,18 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 ### Dependecies
 
 * #### Compilers and softwares :
-	* **[CMake](https://cmake.org/)**.
-	* **[GCC](https://gcc.gnu.org/)** for **Linux**.
-	* **[Clang](https://clang.llvm.org/)** for **MacOS**.
-	* **[Visual Studio](https://visualstudio.microsoft.com/)** (the software or the compiler only) for **Windows**. *(recommended)*
-	* **[MinGW](https://www.mingw-w64.org/)** for **Windows**. *(not recommended)*
+	* **[CMake](https://cmake.org/)**
+	* **[GCC](https://gcc.gnu.org/)** for **Linux**
+	* **[Clang](https://clang.llvm.org/)** for **MacOS**
+	* **[Visual Studio](https://visualstudio.microsoft.com/)** (the software or the compiler only) for **Windows** *(recommended)*
+	* **[MinGW](https://www.mingw-w64.org/)** for **Windows** *(not recommended)*
 
 * #### Libraries :
-	* **[GLM](http://glm.g-truc.net/0.9.6/api/index.html)**.
-	* **[GLEW](http://glew.sourceforge.net/)**.
-	* **[SFML](https://www.sfml-dev.org/)**.
-	* **[ImGui](https://github.com/ocornut/imgui)**.
-	* **[ImGui-SFML](https://github.com/eliasdaler/imgui-sfml)**.
+	* **[GLM](http://glm.g-truc.net/0.9.6/api/index.html)**
+	* **[GLEW](http://glew.sourceforge.net/)**
+	* **[SFML](https://www.sfml-dev.org/)**
+	* **[ImGui](https://github.com/ocornut/imgui)**
+	* **[ImGui-SFML](https://github.com/eliasdaler/imgui-sfml)**
 
 ### Integrating into your project *(not recommended)*
 
@@ -103,11 +103,11 @@ Download the **[skeleton project](https://github.com/angeluriot/Graphics_skeleto
 
 Then run the correct launch file :
 
-* **[unix_launch.sh](https://github.com/angeluriot/Graphics_skeleton/blob/master/unix_launch.sh)** to create and compile the project with **GCC 64** on **Linux** or **Clang 64** on **MacOS**. *(recommended)*
+* **[unix_launch.sh](https://github.com/angeluriot/Graphics_skeleton/blob/master/unix_launch.sh)** to create and compile the project with **GCC 64** on **Linux** or **Clang 64** on **MacOS** *(recommended)*
 
-* **[vs32_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/vs32_launch.bat)** or **[vs64_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/vs64_launch.bat)** to create the project with **Visual Studio 32** or **64** on **Windows**. *(recommended)*
+* **[vs32_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/vs32_launch.bat)** or **[vs64_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/vs64_launch.bat)** to create the project with **Visual Studio 32** or **64** on **Windows** *(recommended)*
 
-* **[mingw32_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/mingw32_launch.bat)** or **[mingw64_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/mingw64_launch.bat)** to create and compile the project with **MinGW 32** or **64** on **Windows**. *(not recommended)*
+* **[mingw32_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/mingw32_launch.bat)** or **[mingw64_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/mingw64_launch.bat)** to create and compile the project with **MinGW 32** or **64** on **Windows** *(not recommended)*
 
 For more information, see the **[README.md](https://github.com/angeluriot/Graphics_skeleton#readme)** of the **[skeleton project](https://github.com/angeluriot/Graphics_skeleton)**.
 
@@ -207,7 +207,7 @@ You can read the documentation by consulting the **[wiki](https://github.com/ang
 
 # Notes
 
-* This is a small project of a single beginner programmer so there may be bugs if you do not use the library as indicated.
+* This is a small project of a single beginner programmer so there may be bugs if you do not use the library as indicated
 
 <br>
 

@@ -112,7 +112,7 @@ namespace dim
 
 	Vector2int Window::get_size()
 	{
-		return window->getSize();
+		return sf::Vector2i(window->getSize());
 	}
 
 	void Window::bind()

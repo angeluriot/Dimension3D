@@ -15,6 +15,7 @@ namespace dim
 	class Material;
 	class Color;
 	void init();
+	void shut_down();
 
 	/**
 	 * @brief // A class that represents an OpenGL shader, it is a program that runs on the GPU (it needs to be binded before use and unbinded after).
@@ -281,6 +282,7 @@ namespace dim
 		static Shader get(const std::string& name);
 
 		friend void init();
+		friend void shut_down();
 	};
 }
 

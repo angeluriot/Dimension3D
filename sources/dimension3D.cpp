@@ -105,6 +105,9 @@ namespace dim
 
 	void shut_down()
 	{
+		Shader::default_shader.shader.reset();
+		Shader::shaders.clear();
+
 		for (auto& scene : Scene::scenes)
 			if (scene.second->to_delete)
 				delete scene.second;

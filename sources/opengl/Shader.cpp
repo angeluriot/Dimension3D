@@ -5,6 +5,14 @@ namespace dim
 	std::map<std::string, Shader> Shader::shaders = {};
 	Shader Shader::default_shader;
 
+	Shader::Shader() {}
+
+	Shader::Shader(const std::string& vert_path, const std::string& frag_path)
+	{
+		shader = std::make_shared<sf::Shader>();
+		load(vert_path, frag_path);
+	}
+
 	void Shader::init()
 	{
 		default_shader.shader = std::make_shared<sf::Shader>();
@@ -116,14 +124,6 @@ namespace dim
 			"	else\n"
 			"		frag_color = initial_color;\n"
 			"}\n");
-	}
-
-	Shader::Shader() {}
-
-	Shader::Shader(const std::string& vert_path, const std::string& frag_path)
-	{
-		shader = std::make_shared<sf::Shader>();
-		load(vert_path, frag_path);
 	}
 
 	void Shader::load(const std::string& vert_path, const std::string& frag_path)

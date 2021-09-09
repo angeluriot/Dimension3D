@@ -101,15 +101,7 @@ Link all the **[dependecies](#dependecies)** to your project and compile the **D
 
 Download the **[skeleton project](https://github.com/angeluriot/Graphics_skeleton)**, delete the **[main.cpp](https://github.com/angeluriot/Graphics_skeleton/blob/master/sources/main.cpp)** demo and put your project files in the **[sources folder](https://github.com/angeluriot/Graphics_skeleton/tree/master/sources)**.
 
-Then run the correct launch file :
-
-* **[unix_launch.sh](https://github.com/angeluriot/Graphics_skeleton/blob/master/unix_launch.sh)** to create and compile the project with **GCC 64** on **Linux** or **Clang 64** on **MacOS** *(recommended)*
-
-* **[vs32_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/vs32_launch.bat)** or **[vs64_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/vs64_launch.bat)** to create the project with **Visual Studio 32** or **64** on **Windows** *(recommended)*
-
-* **[mingw32_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/mingw32_launch.bat)** or **[mingw64_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/mingw64_launch.bat)** to create and compile the project with **MinGW 32** or **64** on **Windows** *(not recommended)*
-
-For more information, see the **[README.md](https://github.com/angeluriot/Graphics_skeleton#readme)** of the **[skeleton project](https://github.com/angeluriot/Graphics_skeleton)**.
+Then follow the instructions of the **skeleton project** **[here](https://github.com/angeluriot/Graphics_skeleton#install)**.
 
 <br>
 

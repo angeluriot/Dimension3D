@@ -4,9 +4,7 @@
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-0052cf)
 ![Size](https://img.shields.io/badge/Size-329Ko-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
-
-<br>
-
+<br><br>
 This repository contains the source code of a simple graphics library (2D, 3D and windows). It looks like **[SFML](https://www.sfml-dev.org/)** for 3D or **[ThreeJS](https://threejs.org/)** for C++.
 
 <br>
@@ -14,6 +12,8 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 <p align="center">
 	<img src="https://i.imgur.com/qzPqvit.png" width="700">
 </p>
+
+<br>
 
 # Summary
 
@@ -36,6 +36,8 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 * **[Documentation](#documentation)**
 * **[Notes](#notes)**
 * **[Credits](#credits)**
+
+<br>
 
 # Features
 
@@ -70,6 +72,8 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 ### Utils :
 
 * Colors, vectors, small functions...
+
+<br>
 
 # Install
 
@@ -106,6 +110,8 @@ Then run the correct launch file :
 * **[mingw32_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/mingw32_launch.bat)** or **[mingw64_launch.bat](https://github.com/angeluriot/Graphics_skeleton/blob/master/mingw64_launch.bat)** to create and compile the project with **MinGW 32** or **64** on **Windows**. *(not recommended)*
 
 For more information, see the **[README.md](https://github.com/angeluriot/Graphics_skeleton#readme)** of the **[skeleton project](https://github.com/angeluriot/Graphics_skeleton)**.
+
+<br>
 
 # Demo
 
@@ -191,13 +197,19 @@ int main()
 
 You can also see the **[releases](https://github.com/angeluriot/Graphics_skeleton/releases)** of the **[skeleton project](https://github.com/angeluriot/Graphics_skeleton)** to test the example code without compiling.
 
+<br>
+
 # Documentation
 
 You can read the documentation by consulting the **[wiki](https://github.com/angeluriot/Dimension3D/wiki)**.
 
+<br>
+
 # Notes
 
 * This is a small project of a single beginner programmer so there may be bugs if you do not use the library as indicated.
+
+<br>
 
 # Credits
 

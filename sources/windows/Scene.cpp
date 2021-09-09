@@ -100,12 +100,6 @@ namespace dim
 	{
 		if (controller != nullptr && camera != nullptr)
 			controller->check_events(sf_event, *this, *camera);
-
-		if (sf_event.type == sf::Event::MouseButtonReleased && resized)
-		{
-			frame_buffer.set_size(size);
-			resized = false;
-		}
 	}
 
 	void Scene::update()
@@ -125,6 +119,12 @@ namespace dim
 			render_texture.setView(camera2D.get_view());
 
 			fixed_camera2D.set_resolution(size);
+		}
+
+		if (!sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && resized)
+		{
+			frame_buffer.set_size(size);
+			resized = false;
 		}
 
 		if (controller != nullptr && camera != nullptr)

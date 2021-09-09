@@ -2,11 +2,6 @@
 
 namespace dim
 {
-	Camera* OrthographicCamera::clone() const
-	{
-		return new OrthographicCamera(*this);
-	}
-
 	OrthographicCamera::OrthographicCamera(float zoom, float near, float far) : Camera()
 	{
 		zoom_level = (zoom > 0.f ? zoom : default_zoom);
@@ -14,6 +9,11 @@ namespace dim
 		this->far = (far > near ? far : near);
 		ratio = 1.f;
 		projection = glm::ortho(-ratio * zoom_level, ratio * zoom_level, -zoom_level, zoom_level, near, far);
+	}
+
+	Camera* OrthographicCamera::clone() const
+	{
+		return new OrthographicCamera(*this);
 	}
 
 	Camera::Type OrthographicCamera::get_type() const

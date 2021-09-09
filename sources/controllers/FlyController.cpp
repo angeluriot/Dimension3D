@@ -2,6 +2,20 @@
 
 namespace dim
 {
+	FlyController::FlyController(float sensitivity, float speed)
+	{
+		this->sensitivity = std::max(sensitivity, 0.f);
+		this->speed = std::max(speed, 0.f);
+		active = true;
+		moving = false;
+		forward = default_forward;
+		left = default_left;
+		right = default_right;
+		backward = default_backward;
+		up = default_up;
+		down = default_down;
+	}
+
 	Controller* FlyController::clone() const
 	{
 		return new FlyController(*this);
@@ -44,20 +58,6 @@ namespace dim
 		float new_pitch = camera.pitch - (sf::Mouse::getPosition(Window::get_window()).y - (Window::get_size() / 2).y) * sensitivity;
 
 		camera.set_direction(new_yaw, new_pitch);
-	}
-
-	FlyController::FlyController(float sensitivity, float speed)
-	{
-		this->sensitivity = std::max(sensitivity, 0.f);
-		this->speed = std::max(speed, 0.f);
-		active = true;
-		moving = false;
-		forward = default_forward;
-		left = default_left;
-		right = default_right;
-		backward = default_backward;
-		up = default_up;
-		down = default_down;
 	}
 
 	Controller::Type FlyController::get_type() const

@@ -2,16 +2,16 @@
 
 namespace dim
 {
-	Light* PointLight::clone() const
-	{
-		return new PointLight(*this);
-	}
-
 	PointLight::PointLight(const Vector3& position, const Color& color, float intensity)
 	{
 		set_position(position);
 		set_color(color);
 		set_intensity(intensity);
+	}
+
+	Light* PointLight::clone() const
+	{
+		return new PointLight(*this);
 	}
 
 	void PointLight::set_position(float x, float y, float z)

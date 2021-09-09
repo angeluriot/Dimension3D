@@ -2,17 +2,17 @@
 
 namespace dim
 {
-	Camera* PerspectiveCamera::clone() const
-	{
-		return new PerspectiveCamera(*this);
-	}
-
 	PerspectiveCamera::PerspectiveCamera(float fov, float near, float far) : Camera()
 	{
 		this->fov = (fov > 0.f ? fov : default_fov);
 		this->near = (near > 0.f ? near : default_near);
 		this->far = (far > near ? far : near);
 		projection = glm::perspective(glm::radians(this->fov), 1.f, this->near, this->far);
+	}
+
+	Camera* PerspectiveCamera::clone() const
+	{
+		return new PerspectiveCamera(*this);
 	}
 
 	Camera::Type PerspectiveCamera::get_type() const

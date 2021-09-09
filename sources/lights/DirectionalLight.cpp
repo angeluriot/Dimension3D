@@ -2,16 +2,16 @@
 
 namespace dim
 {
-	Light* DirectionalLight::clone() const
-	{
-		return new DirectionalLight(*this);
-	}
-
 	DirectionalLight::DirectionalLight(const Vector3& direction, const Color& color, float intensity)
 	{
 		set_direction(direction);
 		set_color(color);
 		set_intensity(intensity);
+	}
+
+	Light* DirectionalLight::clone() const
+	{
+		return new DirectionalLight(*this);
 	}
 
 	void DirectionalLight::set_direction(float x, float y, float z)

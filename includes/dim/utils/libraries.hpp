@@ -15,7 +15,7 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtx/matrix_transform_2d.hpp>
 
-// ImGUI
+// ImGui
 #include <imgui.h>
 #include <imgui-SFML.h>
 

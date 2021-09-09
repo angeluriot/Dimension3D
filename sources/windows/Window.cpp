@@ -230,6 +230,12 @@ namespace dim
 		glCullFace(GL_FRONT);
 		glFrontFace(GL_CW);
 
+		if (cull_face)
+			glEnable(GL_CULL_FACE);
+
+		else
+			glDisable(GL_CULL_FACE);
+
 		glPointSize(thickness);
 		glLineWidth(thickness);
 		glEnable(GL_POINT_SMOOTH);
@@ -276,6 +282,11 @@ namespace dim
 			if (!binded)
 				frame_buffer.unbind();
 		}
+	}
+
+	bool Window::poll_event(sf::Event& sf_event)
+	{
+		return window->pollEvent(sf_event);
 	}
 
 	void Window::check_events(const sf::Event& sf_event)
@@ -445,6 +456,7 @@ namespace dim
 		delete camera;
 		camera = nullptr;
 
+		shut_down();
 		running = false;
 	}
 

@@ -110,8 +110,6 @@ namespace dim
 				delete scene.second;
 
 		Scene::scenes.clear();
-
-		Window::close();
 		ImGui::SFML::Shutdown();
 	}
 }

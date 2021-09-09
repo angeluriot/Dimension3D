@@ -2,11 +2,6 @@
 
 namespace dim
 {
-	Controller* DragController::clone() const
-	{
-		return new DragController(*this);
-	}
-
 	DragController::DragController(float sensitivity, float speed)
 	{
 		this->sensitivity = std::max(sensitivity, 0.f);
@@ -15,6 +10,11 @@ namespace dim
 		prev_mouse_pos = sf::Mouse::getPosition(Window::get_window());
 		prev_mouse_click = false;
 		move_forbidden = false;
+	}
+
+	Controller* DragController::clone() const
+	{
+		return new DragController(*this);
 	}
 
 	Controller::Type DragController::get_type() const

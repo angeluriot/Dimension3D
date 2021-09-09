@@ -12,34 +12,100 @@ namespace dim
 	class Scene;
 	class Window;
 
+	/**
+	 * @brief An abstract class that represents a light (see AmbientLight, DirectionalLight and PointLight).
+	 */
 	class Light
 	{
+	public:
+
+		/**
+		 * @brief The type of light.
+		 */
+		enum class Type
+		{
+			Ambient		= 0,	// An ambient light.
+			Directional	= 1,	// A light at an infinite distance shining in a certain direction (like the sun).
+			Point		= 2		// A light shining in all directions at a certain position.
+		};
+
 	protected:
 
-		Vector3			vector;
-		Color			color;
-		float			intensity;
-
-		virtual Light*	clone() const = 0;
+		Vector3	vector;		// The position for PointLight and the direction for DirectionalLight.
+		Color	color;		// The color of the light.
+		float	intensity;	// The intensity of the light.
 
 	public:
 
-		enum class Type { Ambient = 0, Directional = 1, Point = 2 };
+		/**
+		 * @brief Construct a new light.
+		 */
+		Light();
 
-						Light();
-						Light(const Light& other) = default;
+		/**
+		 * @brief Construct a new light from another.
+		 *
+		 * @param other the reference light
+		 */
+		Light(const Light& other) = default;
 
-		Light&			operator=(const Light& other) = default;
+		/**
+		 * @brief Copy the data of another light.
+		 *
+		 * @param other the light to copy
+		 * @return a reference to the light
+		 */
+		Light& operator=(const Light& other) = default;
 
-		virtual Type	get_type() const = 0;
-		Color			get_color() const;
-		void			set_color(const Color& color);
-		float			get_intensity() const;
-		void			set_intensity(float intensity);
+	protected:
 
-		friend			Shader;
-		friend			Scene;
-		friend			Window;
+		/**
+		 * @brief Create a copy of the light.
+		 *
+		 * @return a pointer to the copy
+		 */
+		virtual Light* clone() const = 0;
+
+	public:
+
+		/**
+		 * @brief Give the type of the light.
+		 *
+		 * @return the type of the light
+		 */
+		virtual Type get_type() const = 0;
+
+		/**
+		 * @brief Give the color of the light.
+		 *
+		 * @return the color of the light
+		 */
+		Color get_color() const;
+
+		/**
+		 * @brief Change the color of the light.
+		 *
+		 * @param color the new color of the light
+		 */
+		void set_color(const Color& color);
+
+		/**
+		 * @brief Give the intensity of the light.
+		 *
+		 * @return the intensity of the light
+		 */
+		float get_intensity() const;
+
+		/**
+		 * @brief Change the intensity of the light.
+		 *
+		 * @param intensity the new intensity of the light
+		 */
+		void set_intensity(float intensity);
+
+		friend Shader;
+		friend Scene;
+		friend Window;
 	};
 }
 

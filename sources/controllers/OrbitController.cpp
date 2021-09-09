@@ -2,11 +2,6 @@
 
 namespace dim
 {
-	Controller* OrbitController::clone() const
-	{
-		return new OrbitController(*this);
-	}
-
 	OrbitController::OrbitController(const Vector3& center, float sensitivity, float speed)
 	{
 		prev_center = Vector3::null;
@@ -18,6 +13,11 @@ namespace dim
 		prev_mouse_pos = sf::Mouse::getPosition();
 		prev_mouse_click = false;
 		rotation_forbidden = false;
+	}
+
+	Controller* OrbitController::clone() const
+	{
+		return new OrbitController(*this);
 	}
 
 	Controller::Type OrbitController::get_type() const

@@ -35,9 +35,24 @@
 
 namespace dim
 {
+	/**
+	 * @brief Initialize the OpenGL library.
+	 */
 	void init_opengl();
+
+	/**
+	 * @brief Initialize the ImGui library.
+	 */
 	void init_imgui();
+
+	/**
+	 * @brief Initialize the Dimension3D library.
+	 */
 	void init();
+
+	/**
+	 * @brief Shut down the Dimension3D library.
+	 */
 	void shut_down();
 }
 

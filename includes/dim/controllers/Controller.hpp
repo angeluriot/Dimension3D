@@ -26,11 +26,22 @@ namespace dim
 			Fly		// A controller that allows you to move the camera with the mouse and the keyboard like a video game (click on the window to control and press escape to stop).
 		};
 
+		/**
+		 * @brief The type of action a controller can apply to the camera.
+		 */
+		enum class Action
+		{
+			Look,	// Change the direction of the camera.
+			Move,	// Change the position of the camera.
+			All		// Change the direction and the position of the camera.
+		};
+
 	protected:
 
 		float	sensitivity;	// The sensitivity of the mouse.
 		float	speed;			// The speed of the camera.
-		bool	active;			// True if the controller is enabled.
+		bool	look_active;	// True if the controller can change the direction of the camera.
+		bool	move_active;	// True if the controller can change the position of the camera.
 
 	public:
 
@@ -136,8 +147,9 @@ namespace dim
 		 * @brief Enable or disable the controller.
 		 *
 		 * @param enable true to enable and false to disable the controller
+		 * @param action the action you want to enable / disable
 		 */
-		void enable(bool enable);
+		void enable(bool enable, Action action = Action::All);
 
 		friend Scene;
 		friend Window;

@@ -26,8 +26,12 @@ namespace dim
 			this->speed = speed;
 	}
 
-	void Controller::enable(bool enable)
+	void Controller::enable(bool enable, Action action)
 	{
-		active = enable;
+		if (action == Action::Look || action == Action::All)
+			look_active = enable;
+
+		if (action == Action::Move || action == Action::All)
+			move_active = enable;
 	}
 }

@@ -18,12 +18,12 @@ namespace dim
 		default_shader.shader = std::make_shared<sf::Shader>();
 
 		default_shader.shader->loadFromMemory(
-			"#version 330\n"
+			"#version 430\n"
 			"precision mediump float;\n"
 			"\n"
-			"attribute vec3 a_position;\n"
-			"attribute vec3 a_normal;\n"
-			"attribute vec2 a_texcoord;\n"
+			"in vec3 a_position;\n"
+			"in vec3 a_normal;\n"
+			"in vec2 a_texcoord;\n"
 			"\n"
 			"out vec3 v_position;\n"
 			"out vec3 v_normal;\n"
@@ -42,7 +42,7 @@ namespace dim
 			"	gl_Position = u_mvp * vec4(a_position, 1.);\n"
 			"}\n",
 
-			"#version 330\n"
+			"#version 430\n"
 			"precision mediump float;\n"
 			"\n"
 			"#define MAX_LIGHTS 10\n"

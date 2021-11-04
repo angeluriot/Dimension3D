@@ -29,31 +29,7 @@ namespace dim
 		unsigned int width = static_cast<unsigned int>(clamp(screen_ratio, 0.f, 1.f) * static_cast<float>(sf::VideoMode::getDesktopMode().width));
 		unsigned int height = static_cast<unsigned int>(clamp(screen_ratio, 0.f, 1.f) * static_cast<float>(sf::VideoMode::getDesktopMode().height));
 
-		width = std::max(width, static_cast<unsigned int>(initial_size.x));
-		height = std::max(height, static_cast<unsigned int>(initial_size.y));
-
-		screen_coef = width / 1920.f;
-
-		sf::ContextSettings settings;
-		settings.depthBits = 24;
-		settings.stencilBits = 8;
-		settings.antialiasingLevel = 8;
-		settings.majorVersion = 3;
-		settings.minorVersion = 3;
-
-		window = new sf::RenderWindow(sf::VideoMode(width, height), name, sf::Style::Default, settings);
-
-		if (icon_path != "")
-		{
-			sf::Image icon;
-
-			if (icon.loadFromFile(icon_path))
-				window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
-		}
-
-		init();
-		frame_buffer.create(width, height);
-		running = true;
+		open(name, width, height, icon_path);
 	}
 
 	void Window::open(const std::string& name, unsigned int width, unsigned int height, const std::string& icon_path)
@@ -67,7 +43,7 @@ namespace dim
 		settings.depthBits = 24;
 		settings.stencilBits = 8;
 		settings.antialiasingLevel = 8;
-		settings.majorVersion = 3;
+		settings.majorVersion = 4;
 		settings.minorVersion = 3;
 
 		window = new sf::RenderWindow(sf::VideoMode(width, height), name, sf::Style::Default, settings);
@@ -140,6 +116,7 @@ namespace dim
 	void Window::set_camera(const Camera& camera)
 	{
 		Window::camera = camera.clone();
+		Window::camera->set_resolution(get_size());
 	}
 
 	Camera& Window::get_camera()
@@ -163,6 +140,12 @@ namespace dim
 		return *controller;
 	}
 
+	void Window::set_shader(const std::string& shader_name)
+	{
+		shader = Shader::get(shader_name);
+		unique_shader = true;
+	}
+
 	void Window::set_shader(const Shader& shader)
 	{
 		Window::shader = shader;
@@ -179,10 +162,17 @@ namespace dim
 		return frame_buffer;
 	}
 
+	void Window::set_post_processing_shader(const std::string& shader_name)
+	{
+		post_processing_shader = Shader::get(shader_name);
+		screen.send_data(post_processing_shader, Mesh::screen, DataType::Positions | DataType::TexCoords);
+		post_processing = true;
+	}
+
 	void Window::set_post_processing_shader(const Shader& shader)
 	{
 		post_processing_shader = shader;
-		screen.send_data(shader, Mesh::screen, DataType::Positions | DataType::TexCoords);
+		screen.send_data(post_processing_shader, Mesh::screen, DataType::Positions | DataType::TexCoords);
 		post_processing = true;
 	}
 

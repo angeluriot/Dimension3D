@@ -34,10 +34,34 @@ namespace dim
 			Linear	= GL_LINEAR		// Blur on zoom.
 		};
 
+		/**
+		 * @brief The type of the texture pixels.
+		 */
+		enum class Type
+		{
+			RGB			= GL_RGB,		// RGB int colors.
+			RGBA		= GL_RGBA,		// RGBA int colors.
+			RGB_16f		= GL_RGB16F,	// Vector3 float16 values.
+			RGBA_16f	= GL_RGBA16F,	// Vector4 float16 values.
+			RGB_32f		= GL_RGB32F,	// Vector3 float32 values.
+			RGBA_32f	= GL_RGBA32F	// Vector4 float32 values.
+		};
+
+		/**
+		 * @brief The permissions of the compute shader using the texture image.
+		 */
+		enum class Permissions
+		{
+			Read	= GL_READ_ONLY,		// Allow access to read the texture.
+			Write	= GL_WRITE_ONLY,	// Allow access to write on the texture.
+			All		= GL_READ_WRITE		// Allow both access.
+		};
+
 	private:
 
 		std::shared_ptr<GLuint>					id;			// The OpenGL id of the texture.
 		mutable std::shared_ptr<unsigned int>	unit;		// The bind order of the texture.
+		std::shared_ptr<Type>					pixel_type;	// The type of the texture pixels.
 
 		static std::map<std::string, Texture>	textures;	// The static textures container.
 		static int								max_unit;	// The current maximum texture bind order - 1
@@ -63,7 +87,7 @@ namespace dim
 		 * @param filtering the way to handle texture zoom
 		 * @param warpping the way to handle texture coordinates outside of the image
 		 */
-		Texture(const std::string& path, Filtering filtering = Filtering::Linear, Warpping warpping = Warpping::Repeat);
+		Texture(const std::string& path, Filtering filtering = Filtering::Linear, Warpping warpping = Warpping::MirroredRepeat);
 
 		/**
 		 * @brief Delete the texture.
@@ -79,13 +103,34 @@ namespace dim
 		Texture&operator=(const Texture& other) = default;
 
 		/**
+		 * @brief Initialize an already created texture.
+		 *
+		 * @param width the width of the texture
+		 * @param height the height of the texture
+		 * @param filtering the way to handle texture zoom
+		 * @param warpping the way to handle texture coordinates outside of the image
+		 * @param pixel_type the type of the texture pixels
+		 */
+		void create(unsigned int width, unsigned int height, Filtering filtering = Filtering::Linear, Warpping warpping = Warpping::MirroredRepeat, Type pixel_type = Type::RGBA);
+
+		/**
+		 * @brief Initialize an already created texture.
+		 *
+		 * @param size the size of the texture
+		 * @param filtering the way to handle texture zoom
+		 * @param warpping the way to handle texture coordinates outside of the image
+		 * @param pixel_type the type of the texture pixels
+		 */
+		void create(Vector2int size, Filtering filtering = Filtering::Linear, Warpping warpping = Warpping::MirroredRepeat, Type pixel_type = Type::RGBA);
+
+		/**
 		 * @brief Load an image file on an already created texture.
 		 *
 		 * @param path the path to the image file
 		 * @param filtering the way to handle texture zoom
 		 * @param warpping the way to handle texture coordinates outside of the image
 		 */
-		void load(const std::string& path, Filtering filtering = Filtering::Linear, Warpping warpping = Warpping::Repeat);
+		void load(const std::string& path, Filtering filtering = Filtering::Linear, Warpping warpping = Warpping::MirroredRepeat);
 
 		/**
 		 * @brief Give the OpenGL id.
@@ -125,8 +170,9 @@ namespace dim
 		 * @param path the path to the image file
 		 * @param filtering the way to handle texture zoom
 		 * @param warpping the way to handle texture coordinates outside of the image
+		 * @param pixel_type the type of the texture pixels
 		 */
-		static void add(const std::string& name, const std::string& path, Filtering filtering = Filtering::Linear, Warpping warpping = Warpping::Repeat);
+		static void add(const std::string& name, const std::string& path, Filtering filtering = Filtering::Linear, Warpping warpping = Warpping::MirroredRepeat, Type pixel_type = Type::RGBA);
 
 		/**
 		 * @brief Remove a texture from the static textures container (throw if the name does not exist).

@@ -18,7 +18,7 @@ namespace dim
 	void shut_down();
 
 	/**
-	 * @brief // A class that represents an OpenGL shader, it is a program that runs on the GPU (it needs to be binded before use and unbinded after).
+	 * @brief A class that represents an OpenGL shader, it is a program that runs on the GPU (it needs to be binded before use and unbinded after).
 	 */
 	class Shader
 	{
@@ -153,7 +153,7 @@ namespace dim
 		void send_uniform(const std::string& name, const std::vector<float>& numbers, unsigned int group = 1) const;
 
 		/**
-		 * @brief Send a int array (they can be grouped in vectors).
+		 * @brief Send a int array to the shader (they can be grouped in vectors).
 		 *
 		 * @param name the name of the GLSL array
 		 * @param numbers the int array to send

@@ -181,6 +181,7 @@ namespace dim
 	void Scene::set_camera(const Camera& camera)
 	{
 		this->camera = camera.clone();
+		(this->camera)->set_resolution(get_size());
 	}
 
 	Camera& Scene::get_camera()
@@ -249,6 +250,12 @@ namespace dim
 		return resized;
 	}
 
+	void Scene::set_shader(const std::string& shader_name)
+	{
+		shader = Shader::get(shader_name);
+		unique_shader = true;
+	}
+
 	void Scene::set_shader(const Shader& shader)
 	{
 		this->shader = shader;
@@ -260,10 +267,17 @@ namespace dim
 		return shader;
 	}
 
+	void Scene::set_post_processing_shader(const std::string& shader_name)
+	{
+		post_processing_shader = Shader::get(shader_name);
+		screen.send_data(post_processing_shader, Mesh::screen, DataType::Positions | DataType::TexCoords);
+		post_processing = true;
+	}
+
 	void Scene::set_post_processing_shader(const Shader& shader)
 	{
 		post_processing_shader = shader;
-		screen.send_data(shader, Mesh::screen, DataType::Positions | DataType::TexCoords);
+		screen.send_data(post_processing_shader, Mesh::screen, DataType::Positions | DataType::TexCoords);
 		post_processing = true;
 	}
 

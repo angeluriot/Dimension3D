@@ -221,6 +221,13 @@ namespace dim
 		/**
 		 * @brief Change the shader of the scene.
 		 *
+		 * @param shader the name of the new shader of the scene
+		 */
+		void set_shader(const std::string& shader_name);
+
+		/**
+		 * @brief Change the shader of the scene.
+		 *
 		 * @param shader the new shader of the scene
 		 */
 		void set_shader(const Shader& shader);
@@ -231,6 +238,13 @@ namespace dim
 		 * @return the shader of the scene
 		 */
 		Shader get_shader() const;
+
+		/**
+		 * @brief Change the post processing shader of the scene.
+		 *
+		 * @param shader the name of the new post processing shader of the scene
+		 */
+		void set_post_processing_shader(const std::string& shader_name);
 
 		/**
 		 * @brief Change the post processing shader of the scene.

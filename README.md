@@ -4,7 +4,9 @@
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-0052cf)
 ![Size](https://img.shields.io/badge/Size-329Ko-f12222)
 ![Open Source](https://badges.frapsoft.com/os/v2/open-source.svg?v=103)
-<br><br>
+
+<br>
+
 This repository contains the source code of a simple graphics library (2D, 3D and windows). It looks like **[SFML](https://www.sfml-dev.org/)** for 3D or **[ThreeJS](https://threejs.org/)** for C++.
 
 <br>

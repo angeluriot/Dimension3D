@@ -6,7 +6,8 @@ namespace dim
 	{
 		this->sensitivity = std::max(sensitivity, 0.f);
 		this->speed = std::max(speed, 0.f);
-		active = true;
+		look_active = true;
+		move_active = true;
 		moving = false;
 		forward = default_forward;
 		left = default_left;
@@ -67,7 +68,7 @@ namespace dim
 
 	void FlyController::check_events(const sf::Event& sf_event, Scene& scene, Camera& camera)
 	{
-		if (active)
+		if (move_active || look_active)
 		{
 			if (!moving && sf_event.type == sf::Event::MouseButtonReleased && scene.is_in(sf::Mouse::getPosition(Window::get_window())))
 			{
@@ -88,7 +89,7 @@ namespace dim
 
 	void FlyController::check_events(const sf::Event& sf_event, Camera& camera)
 	{
-		if (active)
+		if (move_active || look_active)
 		{
 			if (!moving && sf_event.type == sf::Event::MouseButtonReleased && Window::is_in(sf::Mouse::getPosition(Window::get_window())))
 			{
@@ -109,10 +110,14 @@ namespace dim
 
 	void FlyController::update(Scene& scene, Camera& camera)
 	{
-		if (active && moving)
+		if ((move_active || look_active) && moving)
 		{
-			move(camera);
-			look(scene, camera);
+			if (move_active)
+				move(camera);
+
+			if (look_active)
+				look(scene, camera);
+
 			sf::Mouse::setPosition(scene.get_center().to_sf_int(), Window::get_window());
 			ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 		}
@@ -120,10 +125,14 @@ namespace dim
 
 	void FlyController::update(Camera& camera)
 	{
-		if (active && moving)
+		if ((move_active || look_active) && moving)
 		{
-			move(camera);
-			look(camera);
+			if (move_active)
+				move(camera);
+
+			if (look_active)
+				look(camera);
+
 			sf::Mouse::setPosition((Window::get_size() / 2).to_sf_int(), Window::get_window());
 			ImGui::SetMouseCursor(ImGuiMouseCursor_None);
 		}

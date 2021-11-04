@@ -44,15 +44,17 @@ namespace dim
 		 *
 		 * @param width the width of the frame buffer textures
 		 * @param height the height of the frame buffer textures
+		 * @param texture_type the type of the frame buffer texture
 		 */
-		FrameBuffer(unsigned int width, unsigned int height);
+		FrameBuffer(unsigned int width, unsigned int height, Texture::Type texture_type = Texture::Type::RGB);
 
 		/**
 		 * @brief Construct a new frame buffer.
 		 *
 		 * @param size the size of the frame buffer textures
+		 * @param texture_type the type of the frame buffer texture
 		 */
-		FrameBuffer(const Vector2int& size);
+		FrameBuffer(const Vector2int& size, Texture::Type texture_type = Texture::Type::RGB);
 
 		/**
 		 * @brief Delete the frame buffer.
@@ -72,15 +74,17 @@ namespace dim
 		 *
 		 * @param width the width of the frame buffer textures
 		 * @param height the height of the frame buffer textures
+		 * @param texture_type the type of the frame buffer texture
 		 */
-		void create(unsigned int width, unsigned int height);
+		void create(unsigned int width, unsigned int height, Texture::Type texture_type = Texture::Type::RGB);
 
 		/**
 		 * @brief Initialize an already created frame buffer.
 		 *
 		 * @param size the size of the frame buffer textures
+		 * @param texture_type the type of the frame buffer texture
 		 */
-		void create(const Vector2int& size);
+		void create(const Vector2int& size, Texture::Type texture_type = Texture::Type::RGB);
 
 		/**
 		 * @brief Bind the frame buffer.
@@ -177,8 +181,9 @@ namespace dim
 		 * @param name the name of the frame buffer
 		 * @param width the width of the frame buffer textures
 		 * @param height the height of the frame buffer textures
+		 * @param texture_type the type of the frame buffer texture
 		 */
-		static void add(const std::string& name, unsigned int width, unsigned int height);
+		static void add(const std::string& name, unsigned int width, unsigned int height, Texture::Type texture_type = Texture::Type::RGB);
 
 		/**
 		 * @brief Remove a frame buffer from the static frame buffers container (throw if the name does not exist).

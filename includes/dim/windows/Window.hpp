@@ -149,6 +149,13 @@ namespace dim
 		/**
 		 * @brief Change the shader of the window.
 		 *
+		 * @param shader the name of the new shader of the window
+		 */
+		static void set_shader(const std::string& shader_name);
+
+		/**
+		 * @brief Change the shader of the window.
+		 *
 		 * @param shader the new shader of the window
 		 */
 		static void set_shader(const Shader& shader);
@@ -166,6 +173,13 @@ namespace dim
 		 * @return the frame buffer of the window
 		 */
 		static FrameBuffer get_frame_buffer();
+
+		/**
+		 * @brief Change the post processing shader of the window.
+		 *
+		 * @param shader the name of the new post processing shader of the window
+		 */
+		static void set_post_processing_shader(const std::string& shader_name);
 
 		/**
 		 * @brief Change the post processing shader of the window.

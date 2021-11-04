@@ -9,12 +9,14 @@ namespace dim
 	{
 		id = std::make_shared<GLuint>(0);
 		unit = std::make_shared<unsigned int>(-1);
+		pixel_type = std::make_shared<Type>(Type::RGBA);
 	}
 
 	Texture::Texture(const std::string& path, Filtering filtering, Warpping warpping)
 	{
 		id = std::make_shared<GLuint>(0);
 		unit = std::make_shared<unsigned int>(-1);
+		pixel_type = std::make_shared<Type>(Type::RGBA);
 		load(path, filtering, warpping);
 	}
 
@@ -24,10 +26,46 @@ namespace dim
 			glDeleteTextures(1, &(*id));
 	}
 
+	void Texture::create(unsigned int width, unsigned int height, Filtering filtering, Warpping warpping, Type pixel_type)
+	{
+		*(this->pixel_type) = pixel_type;
+
+		glDeleteTextures(1, &(*id));
+		*unit = -1;
+
+		glGenTextures(1, &(*id));
+		glBindTexture(GL_TEXTURE_2D, *id);
+		{
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLenum>(filtering));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLenum>(filtering));
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLenum>(warpping));
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLenum>(warpping));
+
+			glGenerateMipmap(GL_TEXTURE_2D);
+
+			if (pixel_type == Texture::Type::RGB || pixel_type == Texture::Type::RGBA)
+					glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(pixel_type), width, height, 0, static_cast<GLint>(pixel_type), GL_UNSIGNED_BYTE, NULL);
+
+			else if (pixel_type == Texture::Type::RGB_16f || pixel_type == Texture::Type::RGB_32f)
+				glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(pixel_type), width, height, 0, GL_RGB, GL_FLOAT, NULL);
+
+			else
+				glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(pixel_type), width, height, 0, GL_RGBA, GL_FLOAT, NULL);
+		}
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	void Texture::create(Vector2int size, Filtering filtering, Warpping warpping, Type pixel_type)
+	{
+		create(size.x, size.y, filtering, warpping, pixel_type);
+	}
+
 	void Texture::load(const std::string& path, Filtering filtering, Warpping warpping)
 	{
 		glDeleteTextures(1, &(*id));
 		*unit = -1;
+		*pixel_type = Type::RGBA;
 
 		sf::Image image;
 
@@ -43,7 +81,7 @@ namespace dim
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLenum>(warpping));
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLenum>(warpping));
 
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, image.getSize().x, image.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)image.getPixelsPtr());
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.getSize().x, image.getSize().y, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)image.getPixelsPtr());
 			glGenerateMipmap(GL_TEXTURE_2D);
 		}
 		glBindTexture(GL_TEXTURE_2D, 0);
@@ -80,7 +118,7 @@ namespace dim
 			throw std::invalid_argument("This name is already used");
 	}
 
-	void Texture::add(const std::string& name, const std::string& path, Filtering filtering, Warpping warpping)
+	void Texture::add(const std::string& name, const std::string& path, Filtering filtering, Warpping warpping, Type pixel_type)
 	{
 		if (!textures.insert(std::make_pair(name, Texture(path, filtering, warpping))).second)
 			throw std::invalid_argument("This name is already used");

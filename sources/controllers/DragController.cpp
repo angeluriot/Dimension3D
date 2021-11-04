@@ -6,7 +6,8 @@ namespace dim
 	{
 		this->sensitivity = std::max(sensitivity, 0.f);
 		this->speed = std::max(speed, 0.f);
-		active = true;
+		look_active = true;
+		move_active = true;
 		prev_mouse_pos = sf::Mouse::getPosition(Window::get_window());
 		prev_mouse_click = false;
 		move_forbidden = false;
@@ -24,7 +25,7 @@ namespace dim
 
 	void DragController::check_events(const sf::Event& sf_event, Scene& scene, Camera& camera)
 	{
-		if (active && sf_event.type == sf::Event::MouseWheelMoved && scene.is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && scene.is_in(sf::Mouse::getPosition(Window::get_window())))
 		{
 			camera.position += normalize(camera.direction) * speed * static_cast<float>(sf_event.mouseWheel.delta);
 
@@ -42,7 +43,7 @@ namespace dim
 
 	void DragController::check_events(const sf::Event& sf_event, Camera& camera)
 	{
-		if (active && sf_event.type == sf::Event::MouseWheelMoved && Window::is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && Window::is_in(sf::Mouse::getPosition(Window::get_window())))
 		{
 			camera.position += normalize(camera.direction) * speed * static_cast<float>(sf_event.mouseWheel.delta);
 
@@ -73,7 +74,7 @@ namespace dim
 		if (!scene.is_active())
 			move_forbidden = true;
 
-		if (active && !move_forbidden && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+		if (look_active && !move_forbidden && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 		{
 			Vector2 move = Vector2(sf::Mouse::getPosition()) - prev_mouse_pos;
 
@@ -99,7 +100,7 @@ namespace dim
 		else if (prev_mouse_click && !sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			move_forbidden = false;
 
-		if (active && !move_forbidden && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+		if (look_active && !move_forbidden && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 		{
 			Vector2 move = Vector2(sf::Mouse::getPosition()) - prev_mouse_pos;
 

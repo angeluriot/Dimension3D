@@ -9,7 +9,8 @@ namespace dim
 		center_changed = true;
 		this->sensitivity = std::max(sensitivity, 0.f);
 		this->speed = std::max(speed, 0.f);
-		active = true;
+		look_active = true;
+		move_active = true;
 		prev_mouse_pos = sf::Mouse::getPosition();
 		prev_mouse_click = false;
 		rotation_forbidden = false;
@@ -34,7 +35,7 @@ namespace dim
 			center_changed = false;
 		}
 
-		if (active && sf_event.type == sf::Event::MouseWheelMoved && scene.is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && scene.is_in(sf::Mouse::getPosition(Window::get_window())))
 		{
 			camera.position -= center;
 			camera.position.set_norm(std::max(camera.position.get_norm() - static_cast<float>(sf_event.mouseWheel.delta) * speed, 0.01f));
@@ -56,7 +57,7 @@ namespace dim
 			center_changed = false;
 		}
 
-		if (active && sf_event.type == sf::Event::MouseWheelMoved && Window::is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && Window::is_in(sf::Mouse::getPosition(Window::get_window())))
 		{
 			camera.position -= center;
 			camera.position.set_norm(std::max(camera.position.get_norm() - static_cast<float>(sf_event.mouseWheel.delta) * speed, 0.01f));
@@ -91,7 +92,7 @@ namespace dim
 		if (!scene.is_active())
 			rotation_forbidden = true;
 
-		if (active && !rotation_forbidden && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+		if (look_active && !rotation_forbidden && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 		{
 			Vector2 move = Vector2(sf::Mouse::getPosition()) - prev_mouse_pos;
 
@@ -122,7 +123,7 @@ namespace dim
 		else if (prev_mouse_click && !sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			rotation_forbidden = false;
 
-		if (active && !rotation_forbidden && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+		if (look_active && !rotation_forbidden && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 		{
 			Vector2 move = Vector2(sf::Mouse::getPosition()) - prev_mouse_pos;
 

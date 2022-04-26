@@ -27,7 +27,7 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 	* [Simplified OpenGL objects](#simplified-opengl-objects-)
 	* [Utils](#utils-)
 * **[Install](#install)**
-	* [Dependecies](#dependecies)
+	* [Dependencies](#dependencies)
 		* [Compilers](#compilers-)
 		* [Libraries](#libraries-)
 	* [Integrating into your project](#integrating-into-your-project-not-recommended) *(not recommended)*
@@ -79,7 +79,7 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 
 # Install
 
-### Dependecies
+### Dependencies
 
 * #### Compilers and softwares :
 	* **[CMake](https://cmake.org/)**

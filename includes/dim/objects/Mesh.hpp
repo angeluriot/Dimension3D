@@ -58,11 +58,13 @@ namespace dim
 		std::vector<Vector3>	positions;			// The positions data of the mesh.
 		std::vector<Vector3>	normals;			// The normals data of the mesh.
 		std::vector<Vector2>	texcoords;			// The texture coordinates data of the mesh.
+		std::vector<GLuint>     indices;			// The indices data of the mesh.
 
 		static const Mesh		circle_64;			// A circle with 64 edges.
 		static const Mesh		empty_circle_64;	// An empty circle with 64 edges.
 		static const Mesh		cone_64;			// A cone with 64 latitudes.
 		static const Mesh		cube;				// A cube.
+		static const Mesh       cubeIndexed;		// An cube with indexed vertices.
 		static const Mesh		empty_cube;			// An empty cube.
 		static const Mesh		cylinder_64;		// A cylinder with 64 latitudes.
 		static const Mesh		null;				// An empty mesh.
@@ -136,11 +138,25 @@ namespace dim
 		unsigned int get_texcoords_size() const;
 
 		/**
+		 * @brief Give the size of the indices data.
+		 *
+		 * @return the size of the indices data
+		 */
+		unsigned int get_indices_size() const;
+
+		/**
 		 * @brief Give the number of vertices in the mesh.
 		 *
 		 * @return the number of vertices in the mesh
 		 */
 		unsigned int get_nb_vertices() const;
+
+		/**
+		 * @brief Give the number of indices in the mesh.
+		 *
+		 * @return the number of indices in the mesh
+		 */
+		unsigned int get_nb_indices() const;
 
 		/**
 		 * @brief Empty the mesh.
@@ -177,6 +193,13 @@ namespace dim
 		 * @return the a new cube mesh
 		 */
 		static Mesh Cube();
+
+		/**
+		 * @brief Construct a new cube mesh with indexed vertices.
+		 *
+		 * @return the a new cube mesh
+		 */
+		static Mesh CubeIndexed();
 
 		/**
 		 * @brief Construct a new empty cube mesh.

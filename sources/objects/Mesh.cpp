@@ -376,7 +376,6 @@ namespace dim
 			{0, 1}, {1, 1}, {1, 0}, {0, 0}
 		};
 
-		// Clockwise Indices
 		mesh.indices =
 		{
 			0, 1, 2, 2, 3, 0,

@@ -28,6 +28,7 @@ namespace dim
 	{
 		shader = other.shader;
 		mesh = other.mesh;
+		material = other.material;
 		vertex_buffer.set_shader(shader);
 		vertex_buffer.send_data(mesh);
 		texture = other.texture;
@@ -38,6 +39,7 @@ namespace dim
 		model = other.model;
 		thickness = other.thickness;
 		textured = other.textured;
+		binded = other.binded;
 
 		return *this;
 	}

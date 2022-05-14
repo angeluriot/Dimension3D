@@ -744,7 +744,7 @@ namespace dim
 			mesh.texcoords.push_back(texcoord);
 
 		for (auto& indice : mesh_2.indices)
-			mesh.indices.push_back(indice + mesh_1.get_indices_size());
+			mesh.indices.push_back(indice + mesh_1.get_nb_indices());
 
 		return mesh;
 	}

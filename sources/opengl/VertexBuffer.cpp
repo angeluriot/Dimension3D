@@ -148,7 +148,6 @@ namespace dim
 						glEnableVertexAttribArray(texcoords);
 					}
 				}
-				//glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 				if (send_indices)
 				{
@@ -184,12 +183,10 @@ namespace dim
 	void VertexBuffer::bind() const
 	{
 		glBindVertexArray(*vao);
-		//glBindBuffer(GL_ARRAY_BUFFER, *vbo);
 	}
 
 	void VertexBuffer::unbind()
 	{
-		//glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 	}
 

@@ -39,7 +39,7 @@ namespace dim
 		model = other.model;
 		thickness = other.thickness;
 		textured = other.textured;
-		binded = other.binded;
+		binded = false;
 
 		return *this;
 	}

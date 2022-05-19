@@ -6,6 +6,7 @@ namespace dim
 	const Mesh	Mesh::empty_circle_64	= Mesh::EmptyCircle(64);
 	const Mesh	Mesh::cone_64			= Mesh::Cone(64);
 	const Mesh	Mesh::cube				= Mesh::Cube();
+	const Mesh	Mesh::cubeIndexed		= Mesh::CubeIndexed();
 	const Mesh	Mesh::empty_cube		= Mesh::EmptyCube();
 	const Mesh	Mesh::cylinder_64		= Mesh::Cylinder(64);
 	const Mesh	Mesh::null				= Mesh();
@@ -20,6 +21,7 @@ namespace dim
 		positions.clear();
 		normals.clear();
 		texcoords.clear();
+		indices.clear();
 	}
 
 	Mesh& Mesh::operator+=(const Mesh& other)
@@ -32,6 +34,9 @@ namespace dim
 
 		for (auto& texcoord : other.texcoords)
 			texcoords.push_back(texcoord);
+
+		for (auto& indice : other.indices)
+			indices.push_back(indice);
 
 		return *this;
 	}
@@ -51,7 +56,7 @@ namespace dim
 
 	unsigned int Mesh::get_data_size() const
 	{
-		return static_cast<unsigned int>(positions.size() * sizeof(Vector3) + normals.size() * sizeof(Vector3) + texcoords.size() * sizeof(Vector2));
+		return static_cast<unsigned int>(positions.size() * sizeof(Vector3) + normals.size() * sizeof(Vector3) + texcoords.size() * sizeof(Vector2) + indices.size() * sizeof(float));
 	}
 
 	unsigned int Mesh::get_positions_size() const
@@ -69,9 +74,19 @@ namespace dim
 		return static_cast<unsigned int>(texcoords.size() * sizeof(Vector2));
 	}
 
+	unsigned int Mesh::get_indices_size() const
+	{
+		return static_cast<unsigned int>(indices.size() * sizeof(GLuint));
+	}
+
 	unsigned int Mesh::get_nb_vertices() const
 	{
 		return static_cast<unsigned int>(positions.size());
+	}
+
+	unsigned int Mesh::get_nb_indices() const
+	{
+		return static_cast<unsigned int>(indices.size());
 	}
 
 	void Mesh::clear()
@@ -79,6 +94,7 @@ namespace dim
 		positions.clear();
 		normals.clear();
 		texcoords.clear();
+		indices.clear();
 	}
 
 	Mesh Mesh::Circle(unsigned int nb_edges)
@@ -323,6 +339,56 @@ namespace dim
 
 		return mesh;
 	}
+
+	Mesh Mesh::CubeIndexed()
+	{
+		Mesh mesh;
+		mesh.draw_type = DrawType::Triangles;
+		float size = 1.0f;
+
+		mesh.positions =
+		{
+			{0.5f, -0.5f, -0.5f},  {-0.5f, -0.5f, -0.5f}, {-0.5f, 0.5f, -0.5f}, {0.5f, 0.5f, -0.5f},	//Back
+			{-0.5f, -0.5f, 0.5f},  {0.5f, -0.5f, 0.5f},   {0.5f, 0.5f, 0.5f},   {-0.5f, 0.5f, 0.5f},	//Front
+			{0.5f, -0.5f, 0.5f},   {0.5f, -0.5f, -0.5f},  {0.5f, 0.5f, -0.5f},  {0.5f, 0.5f, 0.5f},		//Right
+			{-0.5f, -0.5f, -0.5f}, {-0.5f, -0.5f, 0.5f},  {-0.5f, 0.5f, 0.5f},  {-0.5f, 0.5f, -0.5f},	//Left
+			{-0.5f, 0.5f, 0.5f},   {0.5f, 0.5f, 0.5f},    {0.5f, 0.5f, -0.5f},  {-0.5f, 0.5f, -0.5f},	//Top
+			{-0.5f, -0.5f, -0.5f}, {0.5f, -0.5f, -0.5f},  {0.5f, -0.5f, 0.5f},  {-0.5f, -0.5f, 0.5f}	//Bottom
+		};
+
+		mesh.normals =
+		{
+			{0, 0, -1}, {0, 0, -1}, {0, 0, -1}, {0, 0, -1},	//Back
+			{0, 0, 1},  {0, 0, 1},  {0, 0, 1},  {0, 0, 1},	//Front
+			{1, 0, 0},  {1, 0, 0},  {1, 0, 0},  {1, 0, 0},	//Right
+			{-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0}, {-1, 0, 0},	//Left
+			{0, 1, 0},  {0, 1, 0},  {0, 1, 0},  {0, 1, 0},	//Top
+			{0, -1, 0}, {0, -1, 0}, {0, -1, 0}, {0, -1, 0}	//Bottom
+		};
+
+		mesh.texcoords =
+		{
+			{0, 1}, {1, 1}, {1, 0}, {0, 0},
+			{0, 1}, {1, 1}, {1, 0}, {0, 0},
+			{0, 1}, {1, 1}, {1, 0}, {0, 0},
+			{0, 1}, {1, 1}, {1, 0}, {0, 0},
+			{0, 1}, {1, 1}, {1, 0}, {0, 0},
+			{0, 1}, {1, 1}, {1, 0}, {0, 0}
+		};
+
+		mesh.indices =
+		{
+			0, 1, 2, 2, 3, 0,
+			4, 5, 6, 6, 7, 4,
+			8, 9, 10, 10, 11, 8,
+			12, 13, 14, 14, 15, 12,
+			16, 17, 18, 18, 19, 16,
+			20, 21, 22, 22, 23, 20
+		};
+
+		return mesh;
+	}
+
 
 	Mesh Mesh::EmptyCube()
 	{
@@ -665,6 +731,9 @@ namespace dim
 		for (auto& texcoord : mesh_1.texcoords)
 			mesh.texcoords.push_back(texcoord);
 
+		for (auto& indice : mesh_1.indices)
+			mesh.indices.push_back(indice);
+
 		for (auto& position : mesh_2.positions)
 			mesh.positions.push_back(position);
 
@@ -673,6 +742,9 @@ namespace dim
 
 		for (auto& texcoord : mesh_2.texcoords)
 			mesh.texcoords.push_back(texcoord);
+
+		for (auto& indice : mesh_2.indices)
+			mesh.indices.push_back(indice + mesh_1.get_nb_indices());
 
 		return mesh;
 	}

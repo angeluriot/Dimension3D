@@ -7,7 +7,9 @@ namespace dim
 		shader = Shader::default_shader;
 		vbo = std::make_shared<GLuint>();
 		vao = std::make_shared<GLuint>();
+		ebo = std::make_shared<GLuint>();
 		nb_vertices = std::make_shared<unsigned int>(0);
+		nb_indices = std::make_shared<unsigned int>(0);
 	}
 
 	VertexBuffer::VertexBuffer(const std::string& shader_name)
@@ -15,7 +17,9 @@ namespace dim
 		set_shader(shader_name);
 		vbo = std::make_shared<GLuint>();
 		vao = std::make_shared<GLuint>();
+		ebo = std::make_shared<GLuint>();
 		nb_vertices = std::make_shared<unsigned int>(0);
+		nb_indices = std::make_shared<unsigned int>(0);
 	}
 
 	VertexBuffer::VertexBuffer(const Shader& shader)
@@ -23,7 +27,9 @@ namespace dim
 		set_shader(shader);
 		vbo = std::make_shared<GLuint>();
 		vao = std::make_shared<GLuint>();
+		ebo = std::make_shared<GLuint>();
 		nb_vertices = std::make_shared<unsigned int>(0);
+		nb_indices = std::make_shared<unsigned int>(0);
 	}
 
 	VertexBuffer::VertexBuffer(const std::string& shader_name, const Mesh& mesh, DataType data_sent)
@@ -31,7 +37,9 @@ namespace dim
 		set_shader(shader_name);
 		vbo = std::make_shared<GLuint>();
 		vao = std::make_shared<GLuint>();
+		ebo = std::make_shared<GLuint>();
 		nb_vertices = std::make_shared<unsigned int>(0);
+		nb_indices = std::make_shared<unsigned int>(0);
 		send_data(mesh, data_sent);
 	}
 
@@ -40,7 +48,9 @@ namespace dim
 		set_shader(shader);
 		vbo = std::make_shared<GLuint>();
 		vao = std::make_shared<GLuint>();
+		ebo = std::make_shared<GLuint>();
 		nb_vertices = std::make_shared<unsigned int>(0);
+		nb_indices = std::make_shared<unsigned int>(0);
 		send_data(mesh, data_sent);
 	}
 
@@ -49,6 +59,7 @@ namespace dim
 		if (vbo.unique())
 		{
 			glDeleteBuffers(1, &(*vbo));
+			glDeleteBuffers(1, &(*ebo));
 			glDeleteVertexArrays(1, &(*vao));
 		}
 	}
@@ -80,11 +91,13 @@ namespace dim
 		#pragma warning(push, 0)
 
 		glDeleteBuffers(1, &(*vbo));
+		glDeleteBuffers(1, &(*ebo));
 		glDeleteVertexArrays(1, &(*vao));
 
 		bool send_positions = (data_sent & DataType::Positions) == DataType::Positions;
 		bool send_normals = (data_sent & DataType::Normals) == DataType::Normals;
 		bool send_texcoords = (data_sent & DataType::TexCoords) == DataType::TexCoords;
+		bool send_indices = (data_sent & DataType::Indices) == DataType::Indices;
 
 		*nb_vertices = (data_sent == static_cast<DataType>(0) ? 0 : mesh.get_nb_vertices());
 
@@ -135,7 +148,16 @@ namespace dim
 						glEnableVertexAttribArray(texcoords);
 					}
 				}
-				glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+				if (send_indices)
+				{
+					*nb_indices = mesh.get_nb_indices();
+
+					glGenBuffers(1, &(*ebo));
+					glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, *ebo);
+					glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.indices.size() * sizeof(GLuint), mesh.indices.data(), GL_STATIC_DRAW);
+				}
+
 			}
 			glBindVertexArray(0);
 		}
@@ -153,22 +175,30 @@ namespace dim
 		return *nb_vertices;
 	}
 
+	unsigned int VertexBuffer::get_nb_indices() const
+	{
+		return *nb_indices;
+	}
+
 	void VertexBuffer::bind() const
 	{
 		glBindVertexArray(*vao);
-		glBindBuffer(GL_ARRAY_BUFFER, *vbo);
 	}
 
 	void VertexBuffer::unbind()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);
 	}
 
 	void VertexBuffer::draw(DrawType draw_type) const
 	{
 		if (*nb_vertices)
-			glDrawArrays(static_cast<GLenum>(draw_type == DrawType::Default ? DrawType::Triangles : draw_type), 0, *nb_vertices);
+		{
+			if (*nb_indices)
+				glDrawElements(static_cast<GLenum>(draw_type == DrawType::Default ? DrawType::Triangles : draw_type), *nb_indices, GL_UNSIGNED_INT, nullptr);
+			else
+				glDrawArrays(static_cast<GLenum>(draw_type == DrawType::Default ? DrawType::Triangles : draw_type), 0, *nb_vertices);
+		}
 	}
 
 	DataType operator&(DataType type_1, DataType type_2)

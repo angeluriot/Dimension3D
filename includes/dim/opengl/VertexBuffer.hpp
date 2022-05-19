@@ -18,10 +18,11 @@ namespace dim
 	 */
 	enum class DataType : uint8_t
 	{
-		Positions	= 0b001,	// The position data.
-		Normals		= 0b010,	// The normals data.
-		TexCoords	= 0b100,	// The texture coordinates data.
-		All			= 0b111		// All the data.
+		Positions	= 0b0001,	// The position data.
+		Normals		= 0b0010,	// The normals data.
+		TexCoords	= 0b0100,	// The texture coordinates data.
+		Indices		= 0b1000,	// The indices data.
+		All			= 0b1111	// All the data.
 	};
 
 	/**
@@ -46,7 +47,9 @@ namespace dim
 		Shader							shader;			// The shader used by the vertex buffer.
 		std::shared_ptr<GLuint>			vbo;			// The OpenGL vertex buffer object.
 		std::shared_ptr<GLuint>			vao;			// The OpenGL vertex array object.
+		std::shared_ptr<GLuint>			ebo;			// The OpenGL element buffer object.
 		std::shared_ptr<unsigned int>	nb_vertices;	// The number of vertices of the mesh.
+		std::shared_ptr<unsigned int>	nb_indices;		// The number of indices of the mesh.
 
 	public:
 
@@ -160,6 +163,13 @@ namespace dim
 		 * @return the number of vertices of the mesh
 		 */
 		unsigned int get_nb_vertices() const;
+
+		/**
+		 * @brief Give the number of indices of the mesh.
+		 *
+		 * @return the number of indices of the mesh
+		 */
+		unsigned int get_nb_indices() const;
 
 		/**
 		 * @brief Bind the vertex buffer.

@@ -19,7 +19,9 @@ namespace dim
 		std::shared_ptr<GLuint>						fbo;			// The OpenGL id of the frame buffer.
 		std::shared_ptr<GLuint>						rbo;			// The OpenGL id of the deth buffer.
 		Texture										texture;		// The color texture.
-		std::shared_ptr<Texture::Type>				type;			// The type of the texture's pixels.
+		std::shared_ptr<Texture::Filtering>			filtering;		// The way to handle texture zoom.
+		std::shared_ptr<Texture::Warpping>			warpping;		// The way to handle texture coordinates outside of the image.
+		std::shared_ptr<Texture::Type>				pixel_type;		// The type of the texture's pixels.
 		std::shared_ptr<unsigned int>				width;			// The width of the textures.
 		std::shared_ptr<unsigned int>				height;			// The height of the textures.
 
@@ -44,17 +46,21 @@ namespace dim
 		 *
 		 * @param width the width of the frame buffer textures
 		 * @param height the height of the frame buffer textures
-		 * @param texture_type the type of the frame buffer texture
+		 * @param filtering the way to handle texture zoom
+		 * @param warpping the way to handle texture coordinates outside of the image
+		 * @param pixel_type the type of the frame buffer texture
 		 */
-		FrameBuffer(unsigned int width, unsigned int height, Texture::Type texture_type = Texture::Type::RGB);
+		FrameBuffer(unsigned int width, unsigned int height, Texture::Filtering filtering = Texture::Filtering::Linear, Texture::Warpping warpping = Texture::Warpping::MirroredRepeat, Texture::Type pixel_type = Texture::Type::RGB);
 
 		/**
 		 * @brief Construct a new frame buffer.
 		 *
 		 * @param size the size of the frame buffer textures
-		 * @param texture_type the type of the frame buffer texture
+		 * @param filtering the way to handle texture zoom
+		 * @param warpping the way to handle texture coordinates outside of the image
+		 * @param pixel_type the type of the frame buffer texture
 		 */
-		FrameBuffer(const Vector2int& size, Texture::Type texture_type = Texture::Type::RGB);
+		FrameBuffer(const Vector2int& size, Texture::Filtering filtering = Texture::Filtering::Linear, Texture::Warpping warpping = Texture::Warpping::MirroredRepeat, Texture::Type pixel_type = Texture::Type::RGB);
 
 		/**
 		 * @brief Delete the frame buffer.
@@ -74,17 +80,21 @@ namespace dim
 		 *
 		 * @param width the width of the frame buffer textures
 		 * @param height the height of the frame buffer textures
-		 * @param texture_type the type of the frame buffer texture
+		 * @param filtering the way to handle texture zoom
+		 * @param warpping the way to handle texture coordinates outside of the image
+		 * @param pixel_type the type of the frame buffer texture
 		 */
-		void create(unsigned int width, unsigned int height, Texture::Type texture_type = Texture::Type::RGB);
+		void create(unsigned int width, unsigned int height, Texture::Filtering filtering = Texture::Filtering::Linear, Texture::Warpping warpping = Texture::Warpping::MirroredRepeat, Texture::Type pixel_type = Texture::Type::RGB);
 
 		/**
 		 * @brief Initialize an already created frame buffer.
 		 *
 		 * @param size the size of the frame buffer textures
-		 * @param texture_type the type of the frame buffer texture
+		 * @param filtering the way to handle texture zoom
+		 * @param warpping the way to handle texture coordinates outside of the image
+		 * @param pixel_type the type of the frame buffer texture
 		 */
-		void create(const Vector2int& size, Texture::Type texture_type = Texture::Type::RGB);
+		void create(const Vector2int& size, Texture::Filtering filtering = Texture::Filtering::Linear, Texture::Warpping warpping = Texture::Warpping::MirroredRepeat, Texture::Type pixel_type = Texture::Type::RGB);
 
 		/**
 		 * @brief Bind the frame buffer.
@@ -181,9 +191,11 @@ namespace dim
 		 * @param name the name of the frame buffer
 		 * @param width the width of the frame buffer textures
 		 * @param height the height of the frame buffer textures
-		 * @param texture_type the type of the frame buffer texture
+		 * @param filtering the way to handle texture zoom
+		 * @param warpping the way to handle texture coordinates outside of the image
+		 * @param pixel_type the type of the frame buffer texture
 		 */
-		static void add(const std::string& name, unsigned int width, unsigned int height, Texture::Type texture_type = Texture::Type::RGB);
+		static void add(const std::string& name, unsigned int width, unsigned int height, Texture::Filtering filtering = Texture::Filtering::Linear, Texture::Warpping warpping = Texture::Warpping::MirroredRepeat, Texture::Type pixel_type = Texture::Type::RGB);
 
 		/**
 		 * @brief Remove a frame buffer from the static frame buffers container (throw if the name does not exist).

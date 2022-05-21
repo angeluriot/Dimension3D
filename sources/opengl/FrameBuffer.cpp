@@ -10,29 +10,35 @@ namespace dim
 		rbo = std::make_shared<GLuint>();
 		width = std::make_shared<unsigned int>(Window::initial_size.x);
 		height = std::make_shared<unsigned int>(Window::initial_size.y);
-		type = std::make_shared<Texture::Type>(Texture::Type::RGB);
+		filtering = std::make_shared<Texture::Filtering>(Texture::Filtering::Linear);
+		warpping = std::make_shared<Texture::Warpping>(Texture::Warpping::MirroredRepeat);
+		pixel_type = std::make_shared<Texture::Type>(Texture::Type::RGB);
 	}
 
-	FrameBuffer::FrameBuffer(unsigned int width, unsigned int height, Texture::Type texture_type)
+	FrameBuffer::FrameBuffer(unsigned int width, unsigned int height, Texture::Filtering filtering, Texture::Warpping warpping, Texture::Type pixel_type)
 	{
 		fbo = std::make_shared<GLuint>(0);
 		rbo = std::make_shared<GLuint>(0);
 		this->width = std::make_shared<unsigned int>(std::max(width, static_cast<unsigned int>(1)));
 		this->height = std::make_shared<unsigned int>(std::max(height, static_cast<unsigned int>(1)));
-		type = std::make_shared<Texture::Type>(texture_type);
+		this->filtering = std::make_shared<Texture::Filtering>(filtering);
+		this->warpping = std::make_shared<Texture::Warpping>(warpping);
+		this->pixel_type = std::make_shared<Texture::Type>(pixel_type);
 
-		create(width, height, texture_type);
+		create(width, height, filtering, warpping, pixel_type);
 	}
 
-	FrameBuffer::FrameBuffer(const Vector2int& size, Texture::Type texture_type)
+	FrameBuffer::FrameBuffer(const Vector2int& size, Texture::Filtering filtering, Texture::Warpping warpping, Texture::Type pixel_type)
 	{
 		fbo = std::make_shared<GLuint>(0);
 		rbo = std::make_shared<GLuint>(0);
 		width = std::make_shared<unsigned int>(std::max(size.x, 1));
 		height = std::make_shared<unsigned int>(std::max(size.y, 1));
-		type = std::make_shared<Texture::Type>(texture_type);
+		this->filtering = std::make_shared<Texture::Filtering>(filtering);
+		this->warpping = std::make_shared<Texture::Warpping>(warpping);
+		this->pixel_type = std::make_shared<Texture::Type>(pixel_type);
 
-		create(size, texture_type);
+		create(size, filtering, warpping, pixel_type);
 	}
 
 	FrameBuffer::~FrameBuffer()
@@ -44,11 +50,13 @@ namespace dim
 		}
 	}
 
-	void FrameBuffer::create(unsigned int width, unsigned int height, Texture::Type texture_type)
+	void FrameBuffer::create(unsigned int width, unsigned int height, Texture::Filtering filtering, Texture::Warpping warpping, Texture::Type pixel_type)
 	{
 		*(this->width) = std::max(width, static_cast<unsigned int>(1));
 		*(this->height) = std::max(height, static_cast<unsigned int>(1));
-		*type = texture_type;
+		*(this->filtering) = filtering;
+		*(this->warpping) = warpping;
+		*(this->pixel_type) = pixel_type;
 
 		glDeleteFramebuffers(1, &(*fbo));
 		glDeleteTextures(1, &(*texture.id));
@@ -60,20 +68,20 @@ namespace dim
 			glGenTextures(1, &(*texture.id));
 			glBindTexture(GL_TEXTURE_2D, *texture.id);
 			{
-				if (*type == Texture::Type::RGB || *type == Texture::Type::RGBA)
-					glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(*type), *(this->width), *(this->height), 0, static_cast<GLint>(*type), GL_UNSIGNED_BYTE, NULL);
+				if (pixel_type == Texture::Type::RGB || pixel_type == Texture::Type::RGBA)
+					glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(pixel_type), *(this->width), *(this->height), 0, static_cast<GLint>(pixel_type), GL_UNSIGNED_BYTE, NULL);
 
-				else if (*type == Texture::Type::RGB_16f || *type == Texture::Type::RGB_32f)
-					glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(*type), *(this->width), *(this->height), 0, GL_RGB, GL_FLOAT, NULL);
+				else if (pixel_type == Texture::Type::RGB_16f || pixel_type == Texture::Type::RGB_32f)
+					glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(pixel_type), *(this->width), *(this->height), 0, GL_RGB, GL_FLOAT, NULL);
 
 				else
-					glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(*type), *(this->width), *(this->height), 0, GL_RGBA, GL_FLOAT, NULL);
+					glTexImage2D(GL_TEXTURE_2D, 0, static_cast<GLint>(pixel_type), *(this->width), *(this->height), 0, GL_RGBA, GL_FLOAT, NULL);
 
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLenum>(filtering));
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLenum>(filtering));
 
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLenum>(warpping));
+				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLenum>(warpping));
 
 				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, *texture.id, 0);
 			}
@@ -93,9 +101,9 @@ namespace dim
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	void FrameBuffer::create(const Vector2int& size, Texture::Type texture_type)
+	void FrameBuffer::create(const Vector2int& size, Texture::Filtering filtering, Texture::Warpping warpping, Texture::Type pixel_type)
 	{
-		create(size.x, size.y, texture_type);
+		create(size.x, size.y, filtering, warpping, pixel_type);
 	}
 
 	void FrameBuffer::bind() const
@@ -122,12 +130,12 @@ namespace dim
 
 	void FrameBuffer::set_size(unsigned int width, unsigned int height)
 	{
-		create(width, height, *type);
+		create(width, height, *filtering, *warpping, *pixel_type);
 	}
 
 	void FrameBuffer::set_size(const Vector2int& size)
 	{
-		create(size.x, size.y, *type);
+		create(size.x, size.y, *filtering, *warpping, *pixel_type);
 	}
 
 	void FrameBuffer::set_width(unsigned int width)
@@ -169,9 +177,9 @@ namespace dim
 			throw std::invalid_argument("This name is already used");
 	}
 
-	void FrameBuffer::add(const std::string& name, unsigned int width, unsigned int height, Texture::Type texture_type)
+	void FrameBuffer::add(const std::string& name, unsigned int width, unsigned int height, Texture::Filtering filtering, Texture::Warpping warpping, Texture::Type pixel_type)
 	{
-		if (!frame_buffers.insert(std::make_pair(name, FrameBuffer(width, height, texture_type))).second)
+		if (!frame_buffers.insert(std::make_pair(name, FrameBuffer(width, height, filtering, warpping, pixel_type))).second)
 			throw std::invalid_argument("This name is already used");
 	}
 

@@ -99,6 +99,10 @@ namespace dim
 				throw std::runtime_error("Frame buffer error");
 		}
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		bind();
+		clear();
+		unbind();
 	}
 
 	void FrameBuffer::create(const Vector2int& size, Texture::Filtering filtering, Texture::Warpping warpping, Texture::Type pixel_type)

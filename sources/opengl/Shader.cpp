@@ -80,7 +80,7 @@ namespace dim
 			"\n"
 			"void main()\n"
 			"{\n"
-			"	vec4 initial_color = (1 - u_textured) * u_material.color + u_textured * texture2D(u_texture, v_texcoord);\n"
+			"	vec4 initial_color = (1 - u_textured) * u_material.color + u_textured * texture(u_texture, v_texcoord);\n"
 			"\n"
 			"	if (u_material.illuminated == 1)\n"
 			"	{\n"

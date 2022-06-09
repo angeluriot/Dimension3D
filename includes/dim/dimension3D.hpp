@@ -38,17 +38,17 @@ namespace dim
 	/**
 	 * @brief Initialize the OpenGL library.
 	 */
-	void init_opengl();
+	void init_opengl(const Window& window);
 
 	/**
 	 * @brief Initialize the ImGui library.
 	 */
-	void init_imgui();
+	void init_imgui(Window& window);
 
 	/**
 	 * @brief Initialize the Dimension3D library.
 	 */
-	void init();
+	void init(Window& window);
 
 	/**
 	 * @brief Shut down the Dimension3D library.

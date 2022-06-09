@@ -2,18 +2,25 @@
 
 namespace dim
 {
-	OrbitController::OrbitController(const Vector3& center, float sensitivity, float speed)
+	OrbitController::OrbitController(Window& parent_window, float sensitivity, float speed, const Vector3& center) : 
+			Controller(parent_window, sensitivity, speed, true, true ), 
+			center(center), 
+			prev_mouse_pos(sf::Mouse::getPosition()), 
+			prev_mouse_click(false), 
+			rotation_forbidden(false), 
+			center_changed(true)
+
 	{
 		prev_center = Vector3::null;
-		this->center = center;
-		center_changed = true;
-		this->sensitivity = std::max(sensitivity, 0.f);
-		this->speed = std::max(speed, 0.f);
-		look_active = true;
+		//this->center = center;
+		//center_changed = true;
+		//this->sensitivity = std::max(sensitivity, 0.f);
+		//this->speed = std::max(speed, 0.f);
+		//look_active = true;
 		move_active = true;
-		prev_mouse_pos = sf::Mouse::getPosition();
-		prev_mouse_click = false;
-		rotation_forbidden = false;
+		//prev_mouse_pos = sf::Mouse::getPosition();
+		//prev_mouse_click = false;
+		//rotation_forbidden = false;
 	}
 
 	Controller* OrbitController::clone() const
@@ -35,7 +42,7 @@ namespace dim
 			center_changed = false;
 		}
 
-		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && scene.is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && scene.is_in(sf::Mouse::getPosition(parent_window.get_window())))
 		{
 			camera.position -= center;
 			camera.position.set_norm(std::max(camera.position.get_norm() - static_cast<float>(sf_event.mouseWheel.delta) * speed, 0.01f));
@@ -57,7 +64,7 @@ namespace dim
 			center_changed = false;
 		}
 
-		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && Window::is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && parent_window.is_in(sf::Mouse::getPosition(parent_window.get_window())))
 		{
 			camera.position -= center;
 			camera.position.set_norm(std::max(camera.position.get_norm() - static_cast<float>(sf_event.mouseWheel.delta) * speed, 0.01f));
@@ -79,14 +86,15 @@ namespace dim
 			center_changed = false;
 		}
 
-		if ((!prev_mouse_click && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && (!scene.is_in(sf::Mouse::getPosition(Window::get_window())) ||
+		if ((!prev_mouse_click && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) 
+					&& (!scene.is_in(sf::Mouse::getPosition(parent_window.get_window())) ||
 			!scene.is_active())) || scene.is_moving())
 			rotation_forbidden = true;
 
 		else if (!scene.is_moving() && prev_mouse_click && !sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			rotation_forbidden = false;
 
-		if (!scene.is_moving() && scene.is_active() && scene.is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (!scene.is_moving() && scene.is_active() && scene.is_in(sf::Mouse::getPosition(parent_window.get_window())))
 			rotation_forbidden = false;
 
 		if (!scene.is_active())
@@ -117,7 +125,8 @@ namespace dim
 			center_changed = false;
 		}
 
-		if (!prev_mouse_click && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !Window::is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (!prev_mouse_click && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) 
+					&& !parent_window.is_in(sf::Mouse::getPosition(parent_window.get_window())))
 			rotation_forbidden = true;
 
 		else if (prev_mouse_click && !sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))

@@ -117,6 +117,7 @@ namespace dim
 		 * @return the SFML View object
 		 */
 		sf::View& get_view();
+		const sf::View& get_view() const;
 
 		/**
 		 * @brief Give the zoom level of the view.

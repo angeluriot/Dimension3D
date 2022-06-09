@@ -5,7 +5,7 @@ namespace dim
 	Camera2D::Camera2D()
 	{
 		zoom_level = 1.f;
-		size = Window::initial_size;
+		size = Window::minium_size;
 		view = sf::View((size / 2.f).to_sf_float(), size.to_sf_float());
 	}
 
@@ -73,18 +73,19 @@ namespace dim
 			set_resolution(resolution.x, resolution.y);
 	}
 
-	sf::View& Camera2D::get_view()
-	{
+	sf::View& Camera2D::get_view() {
 		return view;
 	}
 
-	float Camera2D::get_zoom() const
-	{
+	const sf::View& Camera2D::get_view() const {
+		return view;
+	}
+
+	float Camera2D::get_zoom() const {
 		return zoom_level;
 	}
 
-	Vector2 Camera2D::get_resolution() const
-	{
+	Vector2 Camera2D::get_resolution() const {
 		return size;
 	}
 }

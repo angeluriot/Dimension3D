@@ -2,22 +2,27 @@
 
 namespace dim
 {
-	void init_opengl()
+	void init_opengl(const Window& window)
 	{
 		glewExperimental = GL_TRUE;
 		glewInit();
 
-		glViewport(0, 0, Window::get_width(), Window::get_height());
-		glClearColor(Window::background.r, Window::background.g, Window::background.b, Window::background.a);
+		glViewport(0, 0, window.get_width(), window.get_height());
+		glClearColor(
+					window.get_background_color().r, 
+					window.get_background_color().g, 
+					window.get_background_color().b, 
+					window.get_background_color().a
+				);
 		glEnable(GL_DEPTH_TEST);
 		glDepthMask(GL_TRUE);
 		glDepthFunc(GL_LESS);
 		glDepthRange(0.f, 1.f);
 	}
 
-	void init_imgui()
+	void init_imgui(Window& window)
 	{
-		ImGui::SFML::Init(Window::get_window());
+		ImGui::SFML::Init(window.get_window());
 		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 		ImGui::StyleColorsDark();
@@ -96,11 +101,11 @@ namespace dim
 		style.Colors[ImGuiCol_WindowBg] = medium.to_im();
 	}
 
-	void init()
+	void init(Window& window)
 	{
-		init_opengl();
-		init_imgui();
-		Shader::init();
+		init_opengl(window);
+		init_imgui(window);
+		//Shader::init();
 	}
 
 	void shut_down()

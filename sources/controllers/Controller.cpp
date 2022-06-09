@@ -2,7 +2,13 @@
 
 namespace dim
 {
-	Controller::Controller() {}
+	Controller::Controller( Window& parent_window, float sensitivity, float speed, bool look_active, bool move_active ) : 
+			parent_window( parent_window ), 
+			sensitivity( sensitivity ), 
+			speed( speed ), 
+			look_active( look_active ), 
+			move_active( move_active ) 
+		{}
 
 	float Controller::get_sensitivity() const
 	{

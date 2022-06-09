@@ -31,7 +31,12 @@ namespace dim
 		 * @param sensitivity the sensitivity of the mouse
 		 * @param speed the speed of the camera
 		 */
-		OrbitController(const Vector3& center = Vector3(0.f, 0.f, 0.f), float sensitivity = default_sensitivity, float speed = default_speed);
+		OrbitController(
+					Window& parent_window, 
+					float sensitivity = default_sensitivity, 
+					float speed = default_speed, 
+					const Vector3& center = Vector3(0.f, 0.f, 0.f) 
+				);
 
 		/**
 		 * @brief Construct a new orbit controller from another.

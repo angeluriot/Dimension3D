@@ -104,7 +104,7 @@ namespace dim
 		/**
 		 * @brief Unbind the frame buffers.
 		 */
-		static void unbind();
+		static void unbind( Vector2int viewport );
 
 		/**
 		 * @brief Give the OpenGL object id.

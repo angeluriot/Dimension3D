@@ -45,6 +45,7 @@ namespace dim
 		VertexBuffer							screen;					// Screen object used to apply the post processing shader.
 		sf::RenderTexture						clear_texture;			// A render texture to clear OpenGL status.
 		bool									to_delete;				// True if the scene has to be delete automatically.
+		Window&                           parent_window;
 
 		static std::map<std::string, Scene*>	scenes;					// The static scenes container.
 
@@ -55,21 +56,22 @@ namespace dim
 		/**
 		 * @brief Construct a new scene.
 		 */
-		Scene();
+		Scene(Window& parent_window);
 
 		/**
 		 * @brief Construct a new scene from another.
 		 *
 		 * @param other the reference scene
 		 */
-		Scene(const Scene& other);
+		Scene(const Scene& other) = default;
+		Scene(Scene&& other) = default;
 
 		/**
 		 * @brief Construct a new scene.
 		 *
 		 * @param name the name of the scene
 		 */
-		Scene(const std::string& name);
+		Scene(Window& parent_window, const std::string& name);
 
 		/**
 		 * @brief Delete the scene.
@@ -82,7 +84,7 @@ namespace dim
 		 * @param other the scene to copy
 		 * @return a reference to the scene
 		 */
-		Scene& operator=(const Scene& other);
+		Scene& operator=(const Scene& other) = default;
 
 		/**
 		 * @brief Initialize an already created scene.
@@ -336,7 +338,7 @@ namespace dim
 		 *
 		 * @param name the name of the scene
 		 */
-		static void add(const std::string& name);
+		static void add(Window& parent_window, const std::string& name);
 
 		/**
 		 * @brief Remove a scene from the static scenes container (throw if the name does not exist).

@@ -1,28 +1,41 @@
 #include "dim/dimension3D.hpp"
+#include "dim/windows/Window.hpp"
 
 namespace dim
 {
-	sf::RenderWindow*	Window::window					= nullptr;
-	float				Window::screen_coef				= 1.f;
-	sf::Clock			Window::clock;
-	float				Window::elapsed_time			= 1.f / 60.f;
-	float				Window::thickness				= 1.f;
-	const Color			Window::background				= Color(13.f / 255.f, 17.f / 255.f, 23.f / 255.f);
-	const Vector2int	Window::initial_size			= Vector2int(100, 100);
-	bool				Window::running					= false;
-	bool				Window::cull_face				= true;
-	Controller*			Window::controller				= nullptr;
-	Camera*				Window::camera					= nullptr;
-	bool				Window::unique_shader			= false;
-	Shader				Window::shader;
-	bool				Window::binded					= false;
-	Camera2D			Window::fixed_camera2D;
-	std::vector<Light*>	Window::lights					= {};
-	FrameBuffer			Window::frame_buffer;
-	Shader				Window::post_processing_shader;
-	bool				Window::post_processing			= false;
-	VertexBuffer		Window::screen;
-	Camera2D			Window::camera2D;
+
+	const Vector2int Window::minium_size = Vector2int(100, 100);
+	const Color Window::default_background_color = Color(13.f / 255.f, 17.f / 255.f, 23.f / 255.f); 
+
+	Window::Window( 
+			sf::RenderWindow*	window, 
+			float				screen_coef, 
+			float				elapsed_time, 
+			float				thickness, 
+			const Color			background_color, 
+			bool				running, 
+			bool				cull_face, 
+			Controller*			controller, 
+			Camera*				camera, 
+			bool				unique_shader, 
+			bool				binded, 
+			std::vector<Light*>	lights, 
+			bool				post_processing 
+		) : 
+			window( window ), 
+			screen_coef( screen_coef ), 
+			elapsed_time( elapsed_time ), 
+			thickness( thickness ), 
+			background_color( background_color ), 
+			running( running ), 
+			cull_face( cull_face ), 
+			controller( controller ), 
+			camera( camera ), 
+			unique_shader( unique_shader ), 
+			binded( binded ), 
+			lights( lights ), 
+			post_processing( post_processing )  
+	{}
 
 	void Window::open(const std::string& name, float screen_ratio, const std::string& icon_path)
 	{
@@ -34,8 +47,8 @@ namespace dim
 
 	void Window::open(const std::string& name, unsigned int width, unsigned int height, const std::string& icon_path)
 	{
-		width = std::max(width, static_cast<unsigned int>(initial_size.x));
-		height = std::max(height, static_cast<unsigned int>(initial_size.y));
+		width = std::max(width, static_cast<unsigned int>(minium_size.x));
+		height = std::max(height, static_cast<unsigned int>(minium_size.y));
 
 		screen_coef = width / 1920.f;
 
@@ -56,7 +69,7 @@ namespace dim
 				window->setIcon(icon.getSize().x, icon.getSize().y, icon.getPixelsPtr());
 		}
 
-		init();
+		init(*this);
 		frame_buffer.create(width, height);
 		running = true;
 	}
@@ -66,28 +79,31 @@ namespace dim
 		open(name, size.x, size.y, icon_path);
 	}
 
-	sf::RenderWindow& Window::get_window()
-	{
+	const Color Window::get_background_color() const {
+		return background_color;
+	}
+
+	const sf::RenderWindow& Window::get_window() const {
 		return *window;
 	}
 
-	Vector2int Window::get_position()
-	{
+	sf::RenderWindow& Window::get_window() {
+		return *window;
+	}
+
+	Vector2int Window::get_position() const {
 		return window->getPosition();
 	}
 
-	unsigned int Window::get_width()
-	{
+	unsigned int Window::get_width() const {
 		return window->getSize().x;
 	}
 
-	unsigned int Window::get_height()
-	{
+	unsigned int Window::get_height() const {
 		return window->getSize().y;
 	}
 
-	Vector2int Window::get_size()
-	{
+	Vector2int Window::get_size() const {
 		return sf::Vector2i(window->getSize());
 	}
 
@@ -105,7 +121,7 @@ namespace dim
 	void Window::unbind()
 	{
 		if (post_processing)
-			frame_buffer.unbind();
+			frame_buffer.unbind(get_size());
 
 		if (unique_shader)
 			shader.unbind();
@@ -113,10 +129,10 @@ namespace dim
 		binded = false;
 	}
 
-	void Window::set_camera(const Camera& camera)
+	void Window::set_camera(const Camera& to_clone)
 	{
-		Window::camera = camera.clone();
-		Window::camera->set_resolution(get_size());
+		camera = to_clone.clone();
+		camera->set_resolution(get_size());
 	}
 
 	Camera& Window::get_camera()
@@ -127,12 +143,35 @@ namespace dim
 		return *camera;
 	}
 
-	void Window::set_controller(const Controller& controller)
-	{
-		Window::controller = controller.clone();
+	Camera2D& Window::get_camera2D() {
+		return camera2D;
+	}
+
+	void Window::set_controller(const Controller& to_clone) {
+		controller = to_clone.clone();
 	}
 
 	Controller& Window::get_controller()
+	{
+		if (controller == nullptr)
+			throw std::runtime_error("There is no controller");
+
+		return *controller;
+	}
+
+	const Camera& Window::get_camera() const
+	{
+		if (camera == nullptr)
+			throw std::runtime_error("There is no camera");
+
+		return *camera;
+	}
+
+	const Camera2D& Window::get_camera2D() const {
+		return camera2D;
+	}
+
+	const Controller& Window::get_controller() const
 	{
 		if (controller == nullptr)
 			throw std::runtime_error("There is no controller");
@@ -148,7 +187,7 @@ namespace dim
 
 	void Window::set_shader(const Shader& shader)
 	{
-		Window::shader = shader;
+		this->shader = shader;
 		unique_shader = true;
 	}
 
@@ -176,21 +215,18 @@ namespace dim
 		post_processing = true;
 	}
 
-	Shader Window::get_post_processing_shader()
-	{
+	Shader Window::get_post_processing_shader() {
 		return post_processing_shader;
 	}
 
-	Vector2 Window::get_2d_world_mouse_position()
-	{
-		Vector2 pos;
-		pos.x = (sf::Mouse::getPosition(Window::get_window()).x - (get_size() / 2).x) * camera2D.get_zoom() + camera2D.get_view().getCenter().x;
-		pos.y = (sf::Mouse::getPosition(Window::get_window()).y - (get_size() / 2).y) * camera2D.get_zoom() + camera2D.get_view().getCenter().y;
-		return pos;
+	Vector2 Window::get_2d_world_mouse_position() const {
+		return Vector2( 
+				(sf::Mouse::getPosition(get_window()).x - (get_size() / 2).x) * camera2D.get_zoom() + camera2D.get_view().getCenter().x, 
+				(sf::Mouse::getPosition(get_window()).y - (get_size() / 2).y) * camera2D.get_zoom() + camera2D.get_view().getCenter().y 
+			);
 	}
 
-	void Window::add_light(const Light& light)
-	{
+	void Window::add_light(const Light& light) {
 		lights.push_back(light.clone());
 	}
 
@@ -208,11 +244,11 @@ namespace dim
 	void Window::clear(const Color& color)
 	{
 		if (binded)
-			frame_buffer.unbind();
+			frame_buffer.unbind(get_size());
 
 		window->clear(color.to_sf());
 
-		glViewport(0, 0, Window::get_width(), Window::get_height());
+		glViewport(0, 0, get_width(), get_height());
 		glClearColor(color.r, color.g, color.b, color.a);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -231,12 +267,12 @@ namespace dim
 		glEnable(GL_POINT_SMOOTH);
 		glEnable(GL_LINE_SMOOTH);
 
-		ImGui::SFML::Update(dim::Window::get_window(), sf::seconds(Window::elapsed_time));
+		ImGui::SFML::Update(get_window(), sf::seconds(elapsed_time));
 
 		ImGuiWindowFlags windowFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
 
-		if (is_on_border(sf::Mouse::getPosition(Window::get_window())))
+		if (is_on_border(sf::Mouse::getPosition(get_window())))
 			ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_NoMouseCursorChange;
 		else
 			ImGui::GetIO().ConfigFlags &= ~ImGuiConfigFlags_NoMouseCursorChange;
@@ -270,12 +306,11 @@ namespace dim
 			frame_buffer.clear(color);
 
 			if (!binded)
-				frame_buffer.unbind();
+				frame_buffer.unbind(get_size());
 		}
 	}
 
-	bool Window::poll_event(sf::Event& sf_event)
-	{
+	bool Window::poll_event(sf::Event& sf_event) {
 		return window->pollEvent(sf_event);
 	}
 
@@ -286,11 +321,11 @@ namespace dim
 
 		if (sf_event.type == sf::Event::Resized || frame_id < 5)
 		{
-			if (window->getSize().x < static_cast<unsigned int>(initial_size.x))
-				window->setSize(sf::Vector2u(initial_size.x, window->getSize().y));
+			if (window->getSize().x < static_cast<unsigned int>(minium_size.x))
+				window->setSize(sf::Vector2u(minium_size.x, window->getSize().y));
 
-			if (window->getSize().y < static_cast<unsigned int>(initial_size.y))
-				window->setSize(sf::Vector2u(window->getSize().x, initial_size.y));
+			if (window->getSize().y < static_cast<unsigned int>(minium_size.y))
+				window->setSize(sf::Vector2u(window->getSize().x, minium_size.y));
 
 			screen_coef = window->getSize().x / 1920.f;
 
@@ -339,7 +374,7 @@ namespace dim
 
 	void Window::draw(const sf::Drawable& drawable, bool fixed)
 	{
-		Window::set_cull_face(false);
+		set_cull_face(false);
 
 		if (fixed)
 			window->setView(fixed_camera2D.get_view());
@@ -352,7 +387,7 @@ namespace dim
 
 	void Window::draw(const Object& object, DrawType draw_type)
 	{
-		Window::set_cull_face(true);
+		set_cull_face(true);
 
 		if (!binded && post_processing)
 			frame_buffer.bind();
@@ -364,12 +399,12 @@ namespace dim
 			object.draw(camera, lights, draw_type, unique_shader);
 
 		if (!binded && post_processing)
-			frame_buffer.unbind();
+			frame_buffer.unbind(get_size());
 	}
 
 	void Window::draw(const VertexBuffer& vertex_buffer, DrawType draw_type)
 	{
-		Window::set_cull_face(true);
+		set_cull_face(true);
 
 		if (!binded)
 		{
@@ -385,7 +420,7 @@ namespace dim
 		if (!binded)
 		{
 			if (post_processing)
-				frame_buffer.unbind();
+				frame_buffer.unbind(get_size());
 
 			if (unique_shader)
 				shader.unbind();
@@ -397,7 +432,7 @@ namespace dim
 		if (binded)
 		{
 			if (post_processing)
-				frame_buffer.unbind();
+				frame_buffer.unbind(get_size());
 
 			if (unique_shader)
 				shader.unbind();
@@ -450,28 +485,25 @@ namespace dim
 		running = false;
 	}
 
-	int Window::hd_to_window(int position)
-	{
+	int Window::hd_to_window(int position) const {
 		return static_cast<int>(round(position * screen_coef));
 	}
 
-	Vector2int Window::hd_to_window(int x, int y)
-	{
+	Vector2int Window::hd_to_window(int x, int y) const {
 		return Vector2int(x, y) * screen_coef;
 	}
 
-	Vector2int Window::hd_to_window(const Vector2int& position)
-	{
+	Vector2int Window::hd_to_window(const Vector2int& position) const {
 		return position * screen_coef;
 	}
 
 	void Window::set_thickness(float thickness)
 	{
-		if (thickness >= 0.f && thickness != Window::thickness)
+		if (thickness >= 0.f && thickness != thickness)
 		{
 			glPointSize(thickness);
 			glLineWidth(thickness);
-			Window::thickness = thickness;
+			thickness = thickness;
 		}
 	}
 
@@ -490,39 +522,32 @@ namespace dim
 		}
 	}
 
-	float Window::get_elapsed_time()
-	{
+	float Window::get_elapsed_time() const {
 		return elapsed_time;
 	}
 
-	bool Window::is_in(const Vector2& position)
-	{
-		return position.x >= 0 && position.x <= Window::get_width() && position.y >= 0 && position.y <= Window::get_height();
+	bool Window::is_in(const Vector2& position) const {
+		return position.x >= 0 && position.x <= get_width() && position.y >= 0 && position.y <= get_height();
 	}
 
-	bool Window::is_on_border(const Vector2& position)
-	{
-		return (position.x >= -2 && position.x <= 2) || (position.x >= Window::get_width() - 2 && position.x <= Window::get_width() + 2) ||
-			(position.y >= -2 && position.y <= 2) || (position.y >= Window::get_height() - 2 && position.y <= Window::get_height() + 2);
+	bool Window::is_on_border(const Vector2& position) const {
+		return (position.x >= -2 && position.x <= 2) || (position.x >= get_width() - 2 && position.x <= get_width() + 2) ||
+			(position.y >= -2 && position.y <= 2) || (position.y >= get_height() - 2 && position.y <= get_height() + 2);
 	}
 
-	sf::RenderWindow& get_window()
-	{
-		return Window::get_window();
+	sf::RenderWindow& get_window() {
+		return get_window();
 	}
 
-	int hd_to_window(int position)
-	{
-		return Window::hd_to_window(position);
+	int hd_to_window(int position) {
+		return hd_to_window(position);
 	}
 
-	Vector2int hd_to_window(int x, int y)
-	{
-		return Window::hd_to_window(x, y);
+	Vector2int hd_to_window(int x, int y) {
+		return hd_to_window(x, y);
 	}
 
-	Vector2int hd_to_window(const Vector2int& position)
-	{
-		return Window::hd_to_window(position);
+	Vector2int hd_to_window(const Vector2int& position) {
+		return hd_to_window(position);
 	}
 }

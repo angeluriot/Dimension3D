@@ -3,22 +3,21 @@
 namespace dim
 {
 	std::map<std::string, Shader> Shader::shaders = {};
-	Shader Shader::default_shader;
+	Shader Shader::default_shader = {};
 
-	Shader::Shader() { init(); }
+	Shader::Shader() = default;
 
 	Shader::Shader(const std::string& vert_path, const std::string& frag_path)
 	{
-		init();
 		shader = std::make_shared<sf::Shader>();
 		load(vert_path, frag_path);
 	}
 
 	void Shader::init()
 	{
-		static bool default_shader_initialized = false;
-		if( default_shader_initialized == true )
-			return;
+		//static bool default_shader_initialized = false;
+		//if( default_shader_initialized == true )
+		//	return;
 		default_shader.shader = std::make_shared<sf::Shader>();
 
 		default_shader.shader->loadFromMemory(
@@ -128,7 +127,7 @@ namespace dim
 			"	else\n"
 			"		frag_color = initial_color;\n"
 			"}\n");
-			default_shader_initialized = true;
+			//default_shader_initialized = true;
 	}
 
 	void Shader::load(const std::string& vert_path, const std::string& frag_path)

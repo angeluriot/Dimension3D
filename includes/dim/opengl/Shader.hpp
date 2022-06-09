@@ -14,7 +14,8 @@ namespace dim
 	class Light;
 	class Material;
 	class Color;
-	void init();
+	class Window;
+	void init(Window& window);
 	void shut_down();
 
 	/**
@@ -63,10 +64,12 @@ namespace dim
 
 	private:
 
+		friend void ::dim::init(Window& window);
 		/**
 		 * @brief Compile the default shader.
 		 */
 		static void init();
+
 
 	public:
 

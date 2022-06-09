@@ -105,7 +105,7 @@ namespace dim
 	{
 		init_opengl(window);
 		init_imgui(window);
-		//Shader::init();
+		Shader::init();
 	}
 
 	void shut_down()

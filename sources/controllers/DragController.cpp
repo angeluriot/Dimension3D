@@ -2,13 +2,14 @@
 
 namespace dim
 {
-	DragController::DragController(float sensitivity, float speed)
+	DragController::DragController(Window& parent_window, float sensitivity, float speed)
+			: Controller( parent_window, sensitivity, speed, true, true ) 
 	{
-		this->sensitivity = std::max(sensitivity, 0.f);
-		this->speed = std::max(speed, 0.f);
-		look_active = true;
-		move_active = true;
-		prev_mouse_pos = sf::Mouse::getPosition(Window::get_window());
+		//this->sensitivity = std::max(sensitivity, 0.f);
+		//this->speed = std::max(speed, 0.f);
+		//look_active = true;
+		//move_active = true;
+		prev_mouse_pos = sf::Mouse::getPosition(parent_window.get_window());
 		prev_mouse_click = false;
 		move_forbidden = false;
 	}
@@ -25,7 +26,7 @@ namespace dim
 
 	void DragController::check_events(const sf::Event& sf_event, Scene& scene, Camera& camera)
 	{
-		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && scene.is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && scene.is_in(sf::Mouse::getPosition(parent_window.get_window())))
 		{
 			camera.position += normalize(camera.direction) * speed * static_cast<float>(sf_event.mouseWheel.delta);
 
@@ -43,7 +44,7 @@ namespace dim
 
 	void DragController::check_events(const sf::Event& sf_event, Camera& camera)
 	{
-		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && Window::is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (move_active && sf_event.type == sf::Event::MouseWheelMoved && parent_window.is_in(sf::Mouse::getPosition(parent_window.get_window())))
 		{
 			camera.position += normalize(camera.direction) * speed * static_cast<float>(sf_event.mouseWheel.delta);
 
@@ -52,23 +53,23 @@ namespace dim
 
 			camera.view = glm::lookAt(camera.position.to_glm(), (camera.position + camera.direction).to_glm(), glm::vec3(0.f, 1.f, 0.f));
 
-			Vector2 pos = Window::get_2d_world_mouse_position();
-			Window::camera2D.zoom(1.f - (speed * static_cast<float>(sf_event.mouseWheel.delta) * 0.5f));
-			Window::camera2D.set_position((Vector2(Window::camera2D.get_view().getCenter()) - (Window::get_2d_world_mouse_position() - pos)) / Window::camera2D.get_zoom());
-			Window::get_window().setView(Window::camera2D.get_view());
+			Vector2 pos = parent_window.get_2d_world_mouse_position();
+			parent_window.get_camera2D().zoom(1.f - (speed * static_cast<float>(sf_event.mouseWheel.delta) * 0.5f));
+			parent_window.get_camera2D().set_position((Vector2(parent_window.get_camera2D().get_view().getCenter()) - (parent_window.get_2d_world_mouse_position() - pos)) / parent_window.get_camera2D().get_zoom());
+			parent_window.get_window().setView(parent_window.get_camera2D().get_view());
 		}
 	}
 
 	void DragController::update(Scene& scene, Camera& camera)
 	{
-		if ((!prev_mouse_click && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && (!scene.is_in(sf::Mouse::getPosition(Window::get_window())) ||
+		if ((!prev_mouse_click && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && (!scene.is_in(sf::Mouse::getPosition(parent_window.get_window())) ||
 			!scene.is_active())) || scene.is_moving())
 			move_forbidden = true;
 
 		else if (!scene.is_moving() && prev_mouse_click && !sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
 			move_forbidden = false;
 
-		if (!scene.is_moving() && scene.is_active() && scene.is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (!scene.is_moving() && scene.is_active() && scene.is_in(sf::Mouse::getPosition(parent_window.get_window())))
 			move_forbidden = false;
 
 		if (!scene.is_active())
@@ -94,7 +95,8 @@ namespace dim
 
 	void DragController::update(Camera& camera)
 	{
-		if (!prev_mouse_click && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) && !Window::is_in(sf::Mouse::getPosition(Window::get_window())))
+		if (!prev_mouse_click && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left) 
+					&& !parent_window.is_in(sf::Mouse::getPosition(parent_window.get_window())))
 			move_forbidden = true;
 
 		else if (prev_mouse_click && !sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
@@ -106,12 +108,12 @@ namespace dim
 
 			glm::vec3 right = glm::normalize(glm::cross(camera.direction.to_glm(), glm::vec3(0.f, 1.f, 0.f)));
 
-			camera.position -= right * sensitivity * move.x * (4.f / Window::get_size().y);
-			camera.position -= glm::normalize(glm::cross(camera.direction.to_glm(), right)) * sensitivity * move.y * (4.f / Window::get_size().y);
+			camera.position -= right * sensitivity * move.x * (4.f / parent_window.get_size().y);
+			camera.position -= glm::normalize(glm::cross(camera.direction.to_glm(), right)) * sensitivity * move.y * (4.f / parent_window.get_size().y);
 			camera.view = glm::lookAt(camera.position.to_glm(), (camera.position + camera.direction).to_glm(), glm::vec3(0.f, 1.f, 0.f));
 
-			Window::camera2D.move(-move * sensitivity * Window::camera2D.get_zoom());
-			Window::get_window().setView(Window::camera2D.get_view());
+			parent_window.get_camera2D().move(-move * sensitivity * parent_window.get_camera2D().get_zoom());
+			parent_window.get_window().setView(parent_window.get_camera2D().get_view());
 		}
 
 		prev_mouse_pos = sf::Mouse::getPosition();

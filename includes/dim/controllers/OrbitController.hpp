@@ -2,6 +2,8 @@
 #define DIM_ORBITCONTROLLER_HPP
 
 #include "dim/controllers/Controller.hpp"
+#include "dim/vectors/Vector3.hpp"
+#include "dim/vectors/Vector2.hpp"
 
 namespace dim
 {
@@ -31,7 +33,12 @@ namespace dim
 		 * @param sensitivity the sensitivity of the mouse
 		 * @param speed the speed of the camera
 		 */
-		OrbitController(const Vector3& center = Vector3(0.f, 0.f, 0.f), float sensitivity = default_sensitivity, float speed = default_speed);
+		OrbitController(
+					Window& parent_window, 
+					float sensitivity = default_sensitivity, 
+					float speed = default_speed, 
+					const Vector3& center = Vector3(0.f, 0.f, 0.f) 
+				);
 
 		/**
 		 * @brief Construct a new orbit controller from another.
@@ -56,6 +63,8 @@ namespace dim
 		 * @return a pointer to the copy
 		 */
 		Controller* clone() const override;
+		void check_events(const sf::Event& sf_event, Camera& camera, bool in_bounds );
+		void update_internal(Camera& camera);
 
 	public:
 

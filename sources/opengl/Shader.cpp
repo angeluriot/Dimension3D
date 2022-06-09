@@ -3,9 +3,9 @@
 namespace dim
 {
 	std::map<std::string, Shader> Shader::shaders = {};
-	Shader Shader::default_shader;
+	Shader Shader::default_shader = {};
 
-	Shader::Shader() {}
+	Shader::Shader() = default;
 
 	Shader::Shader(const std::string& vert_path, const std::string& frag_path)
 	{
@@ -15,6 +15,9 @@ namespace dim
 
 	void Shader::init()
 	{
+		//static bool default_shader_initialized = false;
+		//if( default_shader_initialized == true )
+		//	return;
 		default_shader.shader = std::make_shared<sf::Shader>();
 
 		default_shader.shader->loadFromMemory(
@@ -80,7 +83,7 @@ namespace dim
 			"\n"
 			"void main()\n"
 			"{\n"
-			"	vec4 initial_color = (1 - u_textured) * u_material.color + u_textured * texture2D(u_texture, v_texcoord);\n"
+			"	vec4 initial_color = (1 - u_textured) * u_material.color + u_textured * texture(u_texture, v_texcoord);\n"
 			"\n"
 			"	if (u_material.illuminated == 1)\n"
 			"	{\n"
@@ -124,6 +127,7 @@ namespace dim
 			"	else\n"
 			"		frag_color = initial_color;\n"
 			"}\n");
+			//default_shader_initialized = true;
 	}
 
 	void Shader::load(const std::string& vert_path, const std::string& frag_path)

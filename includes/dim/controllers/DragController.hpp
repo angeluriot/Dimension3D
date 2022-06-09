@@ -27,7 +27,7 @@ namespace dim
 		 * @param sensitivity the sensitivity of the mouse
 		 * @param speed the speed of the camera
 		 */
-		DragController(float sensitivity = default_sensitivity, float speed = default_speed);
+		DragController(Window& parent_window, float sensitivity = default_sensitivity, float speed = default_speed);
 
 		/**
 		 * @brief Construct a new drag controller from another.

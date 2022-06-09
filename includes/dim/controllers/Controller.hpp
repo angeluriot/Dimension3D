@@ -42,13 +42,15 @@ namespace dim
 		float	speed;			// The speed of the camera.
 		bool	look_active;	// True if the controller can change the direction of the camera.
 		bool	move_active;	// True if the controller can change the position of the camera.
+		Window& parent_window;
 
 	public:
 
+		Controller( Window& parent_window, float sensitivity, float speed, bool look_active, bool move_active );
 		/**
 		 * @brief Construct a new controller.
 		 */
-		Controller();
+		Controller() = default;
 
 		/**
 		 * @brief Construct a new controller from another.

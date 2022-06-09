@@ -1,17 +1,26 @@
 #include "dim/dimension3D.hpp"
+#include <memory>
 
 namespace dim
 {
 	std::map<std::string, Scene*> Scene::scenes = {};
 
-	Scene::Scene()
+	Scene::Scene(
+				Window& parent_window, 
+				std::string name, 
+				Vector2int size, 
+				std::unique_ptr< Camera >& camera, 
+				std::unique_ptr< Controller >& controller 
+			) : 
+			parent_window( parent_window ), 
+			name( name ), 
+			size( size ), 
+			camera( std::move( camera ) ), 
+			controller( std::move( controller ) ) 
 	{
-		name = "";
-		controller = nullptr;
-		camera = nullptr;
-		size = Window::initial_size;
+		frame_buffer.create(size);
+		render_texture.create(size.x, size.y);
 		min  = Vector2int::null;
-		max = Window::initial_size;
 		active = false;
 		moving = false;
 		resized = false;
@@ -21,30 +30,16 @@ namespace dim
 		lights.clear();
 		post_processing = false;
 		to_delete = false;
+		clear_texture.create(size.x, size.y);
 	}
 
-	Scene::Scene(const Scene& scene)
-	{
-		*this = scene;
-	}
-
-	Scene::Scene(const std::string& name)
-	{
-		create(name);
-	}
-
-	Scene::~Scene()
-	{
-		delete controller;
-		controller = nullptr;
-
-		delete camera;
-		camera = nullptr;
-	}
-
+	Scene::~Scene() {}
+/*
 	Scene& Scene::operator=(const Scene& other)
 	{
+		static_assert(false, "Scenee:operator=(const Scene& other) needs work.");
 		name = other.name + " (copy)";
+		//parent_window = other.parent_window;
 		frame_buffer.create(other.frame_buffer.get_size());
 		render_texture.create(other.render_texture.getSize().x, other.render_texture.getSize().y);
 		controller = other.controller->clone();
@@ -73,31 +68,9 @@ namespace dim
 
 		return *this;
 	}
+	*/
 
-	void Scene::create(const std::string& name)
-	{
-		this->name = name;
-		frame_buffer.create(Window::initial_size);
-		render_texture.create(Window::initial_size.x, Window::initial_size.y);
-		controller = nullptr;
-		camera = nullptr;
-		size = Window::initial_size;
-		min  = Vector2int::null;
-		max = Window::initial_size;
-		active = false;
-		moving = false;
-		resized = false;
-		frame_id = 0;
-		unique_shader = false;
-		binded = false;
-		lights.clear();
-		post_processing = false;
-		clear_texture.create(Window::initial_size.x, Window::initial_size.y);
-		to_delete = false;
-	}
-
-	void Scene::check_events(const sf::Event& sf_event)
-	{
+	void Scene::check_events(const sf::Event& sf_event) {
 		if (controller != nullptr && camera != nullptr)
 			controller->check_events(sf_event, *this, *camera);
 	}
@@ -160,7 +133,7 @@ namespace dim
 
 	void Scene::unbind() const
 	{
-		frame_buffer.unbind();
+		frame_buffer.unbind(size);
 
 		if (unique_shader)
 			shader.unbind();
@@ -178,10 +151,9 @@ namespace dim
 		this->name = name;
 	}
 
-	void Scene::set_camera(const Camera& camera)
-	{
-		this->camera = camera.clone();
-		(this->camera)->set_resolution(get_size());
+	void Scene::set_camera( std::unique_ptr< Camera >& new_camera ) {
+		camera = std::move( new_camera );
+		camera->set_resolution(get_size());
 	}
 
 	Camera& Scene::get_camera()
@@ -192,9 +164,8 @@ namespace dim
 		return *camera;
 	}
 
-	void Scene::set_controller(const Controller& controller)
-	{
-		this->controller = controller.clone();
+	void Scene::set_controller( std::unique_ptr< Controller >& new_controller ) {
+		controller = std::move( new_controller );
 	}
 
 	Controller& Scene::get_controller()
@@ -230,77 +201,65 @@ namespace dim
 		return frame_buffer;
 	}
 
-	const sf::RenderTexture& Scene::get_render_texture() const
-	{
+	const sf::RenderTexture& Scene::get_render_texture() const {
 		return render_texture;
 	}
 
-	bool Scene::is_active() const
-	{
+	bool Scene::is_active() const {
 		return active;
 	}
 
-	bool Scene::is_moving() const
-	{
+	bool Scene::is_moving() const {
 		return moving;
 	}
 
-	bool Scene::is_resized() const
-	{
+	bool Scene::is_resized() const {
 		return resized;
 	}
 
-	void Scene::set_shader(const std::string& shader_name)
-	{
+	void Scene::set_shader(const std::string& shader_name) {
 		shader = Shader::get(shader_name);
 		unique_shader = true;
 	}
 
-	void Scene::set_shader(const Shader& shader)
-	{
+	void Scene::set_shader(const Shader& shader) {
 		this->shader = shader;
 		unique_shader = true;
 	}
 
-	Shader Scene::get_shader() const
-	{
+	Shader Scene::get_shader() const {
 		return shader;
 	}
 
-	void Scene::set_post_processing_shader(const std::string& shader_name)
-	{
+	void Scene::set_post_processing_shader(const std::string& shader_name) {
 		post_processing_shader = Shader::get(shader_name);
 		screen.send_data(post_processing_shader, Mesh::screen, DataType::Positions | DataType::TexCoords);
 		post_processing = true;
 	}
 
-	void Scene::set_post_processing_shader(const Shader& shader)
-	{
+	void Scene::set_post_processing_shader(const Shader& shader) {
 		post_processing_shader = shader;
 		screen.send_data(post_processing_shader, Mesh::screen, DataType::Positions | DataType::TexCoords);
 		post_processing = true;
 	}
 
-	Shader Scene::get_post_processing_shader() const
-	{
+	Shader Scene::get_post_processing_shader() const {
 		return post_processing_shader;
 	}
 
-	bool Scene::is_in(const Vector2& position) const
-	{
+	bool Scene::is_in(const Vector2& position) const {
 		return position.x >= min.x && position.x <= max.x && position.y >= min.y && position.y <= max.y;
 	}
 
 	Vector2 Scene::get_2d_world_mouse_position()
 	{
 		Vector2 pos;
-		pos.x = (sf::Mouse::getPosition(Window::get_window()).x - get_center().x) * camera2D.get_zoom() + camera2D.get_view().getCenter().x;
-		pos.y = (sf::Mouse::getPosition(Window::get_window()).y - get_center().y) * camera2D.get_zoom() + camera2D.get_view().getCenter().y;
+		pos.x = (sf::Mouse::getPosition(parent_window.get_window()).x - get_center().x) * camera2D.get_zoom() + camera2D.get_view().getCenter().x;
+		pos.y = (sf::Mouse::getPosition(parent_window.get_window()).y - get_center().y) * camera2D.get_zoom() + camera2D.get_view().getCenter().y;
 		return pos;
 	}
 
-	void Scene::add_light(const Light& light)
-	{
+	void Scene::add_light(const Light& light) {
 		lights.push_back(light.clone());
 	}
 
@@ -321,7 +280,7 @@ namespace dim
 			frame_buffer.bind();
 
 		frame_buffer.clear(color);
-		frame_buffer.unbind();
+		frame_buffer.unbind(size);
 
 		render_texture.clear(color.to_sf());
 		clear_texture.clear();
@@ -332,7 +291,7 @@ namespace dim
 
 	void Scene::draw(const sf::Drawable& drawable, bool fixed)
 	{
-		Window::set_cull_face(false);
+		parent_window.set_cull_face(false);
 
 		if (fixed)
 			render_texture.setView(fixed_camera2D.get_view());
@@ -345,24 +304,24 @@ namespace dim
 
 	void Scene::draw(const Object& object, DrawType draw_type)
 	{
-		Window::set_cull_face(true);
+		parent_window.set_cull_face(true);
 
 		if (!binded)
 			frame_buffer.bind();
 
 		if (draw_type == DrawType::Default)
-			object.draw(camera, lights, object.mesh.draw_type, unique_shader);
+			object.draw(camera.get(), lights, object.mesh.draw_type, unique_shader);
 
 		else
-			object.draw(camera, lights, draw_type, unique_shader);
+			object.draw(camera.get(), lights, draw_type, unique_shader);
 
 		if (!binded)
-			frame_buffer.unbind();
+			frame_buffer.unbind(size);
 	}
 
 	void Scene::draw(const VertexBuffer& vertex_buffer, DrawType draw_type)
 	{
-		Window::set_cull_face(true);
+		parent_window.set_cull_face(true);
 
 		if (!binded)
 		{
@@ -376,7 +335,7 @@ namespace dim
 
 		if (!binded)
 		{
-			frame_buffer.unbind();
+			frame_buffer.unbind(size);
 
 			if (unique_shader)
 				shader.unbind();
@@ -406,11 +365,11 @@ namespace dim
 			post_processing_shader.unbind();
 
 			if (!binded)
-				frame_buffer.unbind();
+				frame_buffer.unbind(size);
 		}
 
 		if (binded)
-			frame_buffer.unbind();
+			frame_buffer.unbind(size);
 
 		// SFML
 
@@ -418,7 +377,13 @@ namespace dim
 
 		// ImGui
 
-		ImGui::SetNextWindowSizeConstraints(ImVec2(50.f, 50.f), ImVec2(100000.f, 100000.f));
+		//TODO: Magic numbers.//
+		ImGui::SetNextWindowSizeConstraints(
+				//ImVec2( parent_window.minium_size.x, parent_window.minium_size.y ), 
+				//ImVec2( parent_window.get_size().x / 2, parent_window.get_size().y / 2 ) 
+					ImVec2(50.f, 50.f), 
+					ImVec2(100000.f, 100000.f)
+				);
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse;
 
 		ImGui::Begin(name.data(), NULL, window_flags);
@@ -445,12 +410,17 @@ namespace dim
 
 		active = ImGui::IsWindowFocused();
 
-		ImGui::SetCursorPos(ImVec2(8.f, 27.f));
-		ImGui::Image(frame_buffer.get_texture().get_id(), ImVec2(static_cast<float>(temp.x), static_cast<float>(temp.y)), ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
-		ImGui::SetCursorPos(ImVec2(8.f, 27.f));
-		ImGui::Image(render_texture.getTexture().getNativeHandle(),
-			ImVec2(static_cast<float>(render_texture.getTexture().getSize().x),
-			static_cast<float>(render_texture.getTexture().getSize().y)), ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
+		//ImGui::SetCursorPos(ImVec2(8.f, 27.f));
+		//ImGui::SetCursorPos( ImGui::GetWindowSize() * 0.5f ); 
+		ImGui::Image(
+					(void*)(intptr_t)frame_buffer.get_texture().get_id(), 
+					ImVec2(static_cast<float>(temp.x), static_cast<float>(temp.y)), 
+					ImVec2(0.f, 1.f), ImVec2(1.f, 0.f)
+				);
+		//ImGui::SetCursorPos(ImVec2(8.f, 27.f));
+		//ImGui::Image((void*)(intptr_t)render_texture.getTexture().getNativeHandle(),
+		//	ImVec2(static_cast<float>(render_texture.getTexture().getSize().x),
+		//	static_cast<float>(render_texture.getTexture().getSize().y)), ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
 
 		ImGui::End();
 
@@ -471,12 +441,14 @@ namespace dim
 			throw std::invalid_argument("This name is already used");
 	}
 
-	void Scene::add(const std::string& name)
+	void Scene::add(Window& parent_window, const std::string& name, Vector2int size)
 	{
-		if (!scenes.insert(std::make_pair(name, new Scene(name))).second)
+		/*if (!scenes.insert(std::make_pair(name, new Scene(parent_window, name, size))).second)
 			throw std::invalid_argument("This name is already used");
 
+
 		get(name).to_delete = true;
+		*/
 	}
 
 	void Scene::remove(const std::string& name)

@@ -8,8 +8,8 @@ namespace dim
 	{
 		fbo = std::make_shared<GLuint>();
 		rbo = std::make_shared<GLuint>();
-		width = std::make_shared<unsigned int>(Window::initial_size.x);
-		height = std::make_shared<unsigned int>(Window::initial_size.y);
+		width = std::make_shared<unsigned int>(Window::minium_size.x);
+		height = std::make_shared<unsigned int>(Window::minium_size.y);
 		filtering = std::make_shared<Texture::Filtering>(Texture::Filtering::Linear);
 		warpping = std::make_shared<Texture::Warpping>(Texture::Warpping::MirroredRepeat);
 		pixel_type = std::make_shared<Texture::Type>(Texture::Type::RGB);
@@ -102,7 +102,7 @@ namespace dim
 
 		bind();
 		clear();
-		unbind();
+		unbind(Vector2int(width, height));
 	}
 
 	void FrameBuffer::create(const Vector2int& size, Texture::Filtering filtering, Texture::Warpping warpping, Texture::Type pixel_type)
@@ -116,10 +116,10 @@ namespace dim
 		glViewport(0, 0, *width, *height);
 	}
 
-	void FrameBuffer::unbind()
+	void FrameBuffer::unbind(const Vector2int viewport)
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-		glViewport(0, 0, Window::get_width(), Window::get_height());
+		glViewport(0, 0, viewport.x, viewport.y);
 	}
 
 	GLuint FrameBuffer::get_id() const

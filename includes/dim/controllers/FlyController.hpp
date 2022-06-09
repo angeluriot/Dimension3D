@@ -38,7 +38,7 @@ namespace dim
 		 * @param sensitivity the sensitivity of the mouse
 		 * @param speed the speed of the camera
 		 */
-		FlyController(float sensitivity = default_sensitivity, float speed = default_speed);
+		FlyController(Window& parent_window, float sensitivity = default_sensitivity, float speed = default_speed);
 
 		/**
 		 * @brief Construct a new fly controller from another.

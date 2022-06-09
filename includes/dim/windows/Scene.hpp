@@ -26,8 +26,8 @@ namespace dim
 		std::string								name;					// The name of the scene.
 		FrameBuffer								frame_buffer;			// The frame buffer where Dimension3D objects are drawn.
 		sf::RenderTexture						render_texture;			// The render texture where SFML shapes are drawn.
-		Controller*								controller;				// The controller of the scene.
-		Camera*									camera;					// The 3D camera of the scene.
+		std::unique_ptr< Controller >			controller;				// The controller of the scene.
+		std::unique_ptr< Camera >				camera;					// The 3D camera of the scene.
 		Vector2int								size;					// The size of the window.
 		Vector2int								min;					// The top left corner coordinates of the window.
 		Vector2int								max;					// The right down corner coordinates of the window.
@@ -56,7 +56,13 @@ namespace dim
 		/**
 		 * @brief Construct a new scene.
 		 */
-		Scene(Window& parent_window, std::string name, Vector2int size);
+		Scene(
+					Window& parent_window, 
+					std::string name, 
+					Vector2int size, 
+					std::unique_ptr< Camera >& camera, 
+					std::unique_ptr< Controller >& controller 
+				);
 
 		/**
 		 * @brief Construct a new scene from another.
@@ -101,6 +107,8 @@ namespace dim
 		 */
 		void unbind() const;
 
+		void from_controller(const Controller& new_controller);
+
 		/**
 		 * @brief Give the name of the scene.
 		 *
@@ -120,7 +128,8 @@ namespace dim
 		 *
 		 * @param camera the new 3D camera of the scene
 		 */
-		void set_camera(const Camera& camera);
+
+		void set_camera(std::unique_ptr< Camera >& new_camera);
 
 		/**
 		 * @brief Give a reference to the 3D camera of the scene.
@@ -134,7 +143,7 @@ namespace dim
 		 *
 		 * @param controller the new controller of the scene
 		 */
-		void set_controller(const Controller& controller);
+		void set_controller(std::unique_ptr< Controller >& to_copy);
 
 		/**
 		 * @brief Give a reference to the controller of the scene.

@@ -1,18 +1,25 @@
 #include "dim/dimension3D.hpp"
+#include <memory>
 
 namespace dim
 {
 	std::map<std::string, Scene*> Scene::scenes = {};
 
-	Scene::Scene(Window& parent_window, std::string name, Vector2int size) : 
+	Scene::Scene(
+				Window& parent_window, 
+				std::string name, 
+				Vector2int size, 
+				std::unique_ptr< Camera >& camera, 
+				std::unique_ptr< Controller >& controller 
+			) : 
 			parent_window( parent_window ), 
 			name( name ), 
-			size( size ) 
+			size( size ), 
+			camera( std::move( camera ) ), 
+			controller( std::move( controller ) ) 
 	{
 		frame_buffer.create(size);
 		render_texture.create(size.x, size.y);
-		controller = nullptr;
-		camera = nullptr;
 		min  = Vector2int::null;
 		active = false;
 		moving = false;
@@ -26,14 +33,7 @@ namespace dim
 		clear_texture.create(size.x, size.y);
 	}
 
-	Scene::~Scene()
-	{
-		delete controller;
-		controller = nullptr;
-
-		delete camera;
-		camera = nullptr;
-	}
+	Scene::~Scene() {}
 /*
 	Scene& Scene::operator=(const Scene& other)
 	{
@@ -151,10 +151,9 @@ namespace dim
 		this->name = name;
 	}
 
-	void Scene::set_camera(const Camera& camera)
-	{
-		this->camera = camera.clone();
-		(this->camera)->set_resolution(get_size());
+	void Scene::set_camera( std::unique_ptr< Camera >& new_camera ) {
+		camera = std::move( new_camera );
+		camera->set_resolution(get_size());
 	}
 
 	Camera& Scene::get_camera()
@@ -165,9 +164,8 @@ namespace dim
 		return *camera;
 	}
 
-	void Scene::set_controller(const Controller& controller)
-	{
-		this->controller = controller.clone();
+	void Scene::set_controller( std::unique_ptr< Controller >& new_controller ) {
+		controller = std::move( new_controller );
 	}
 
 	Controller& Scene::get_controller()
@@ -312,10 +310,10 @@ namespace dim
 			frame_buffer.bind();
 
 		if (draw_type == DrawType::Default)
-			object.draw(camera, lights, object.mesh.draw_type, unique_shader);
+			object.draw(camera.get(), lights, object.mesh.draw_type, unique_shader);
 
 		else
-			object.draw(camera, lights, draw_type, unique_shader);
+			object.draw(camera.get(), lights, draw_type, unique_shader);
 
 		if (!binded)
 			frame_buffer.unbind(size);
@@ -445,10 +443,12 @@ namespace dim
 
 	void Scene::add(Window& parent_window, const std::string& name, Vector2int size)
 	{
-		if (!scenes.insert(std::make_pair(name, new Scene(parent_window, name, size))).second)
+		/*if (!scenes.insert(std::make_pair(name, new Scene(parent_window, name, size))).second)
 			throw std::invalid_argument("This name is already used");
 
+
 		get(name).to_delete = true;
+		*/
 	}
 
 	void Scene::remove(const std::string& name)

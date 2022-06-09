@@ -86,11 +86,15 @@ namespace dim
 					);
 			center_changed = false;
 		}
-		if (look_active && !rotation_forbidden && sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
+		auto pressed = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+		//std::cout << "rotation_forbidden " << rotation_forbidden << "\nlook_active: " << look_active << "\npressed: " << pressed << "\n";
+		if (look_active && !rotation_forbidden && pressed )
 		{
 			Vector2 move = Vector2(sf::Mouse::getPosition()) - prev_mouse_pos;
+			//std::cout << "move: " << move << "\n";
 
 			camera.position -= center;
+			std::cout << center - camera.position << "\n";
 			camera.position.set_theta(camera.position.get_theta() - move.x * sensitivity);
 			camera.position.set_phi(std::min(std::max(camera.position.get_phi() - move.y * sensitivity, 0.01f), pi - 0.01f));
 			camera.position += center;

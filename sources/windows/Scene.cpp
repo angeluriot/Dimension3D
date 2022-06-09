@@ -4,14 +4,16 @@ namespace dim
 {
 	std::map<std::string, Scene*> Scene::scenes = {};
 
-	Scene::Scene(Window& parent_window) : parent_window( parent_window )
+	Scene::Scene(Window& parent_window, std::string name, Vector2int size) : 
+			parent_window( parent_window ), 
+			name( name ), 
+			size( size ) 
 	{
-		name = "";
+		frame_buffer.create(size);
+		render_texture.create(size.x, size.y);
 		controller = nullptr;
 		camera = nullptr;
-		size = Window::minium_size;
 		min  = Vector2int::null;
-		max = Window::minium_size;
 		active = false;
 		moving = false;
 		resized = false;
@@ -21,10 +23,7 @@ namespace dim
 		lights.clear();
 		post_processing = false;
 		to_delete = false;
-	}
-
-	Scene::Scene(Window& parent_window, const std::string& name) : parent_window( parent_window ) {
-		create(name);
+		clear_texture.create(size.x, size.y);
 	}
 
 	Scene::~Scene()
@@ -71,30 +70,7 @@ namespace dim
 	}
 	*/
 
-	void Scene::create(const std::string& name)
-	{
-		this->name = name;
-		frame_buffer.create(Window::minium_size);
-		render_texture.create(Window::minium_size.x, Window::minium_size.y);
-		controller = nullptr;
-		camera = nullptr;
-		size = Window::minium_size;
-		min  = Vector2int::null;
-		max = Window::minium_size;
-		active = false;
-		moving = false;
-		resized = false;
-		frame_id = 0;
-		unique_shader = false;
-		binded = false;
-		lights.clear();
-		post_processing = false;
-		clear_texture.create(Window::minium_size.x, Window::minium_size.y);
-		to_delete = false;
-	}
-
-	void Scene::check_events(const sf::Event& sf_event)
-	{
+	void Scene::check_events(const sf::Event& sf_event) {
 		if (controller != nullptr && camera != nullptr)
 			controller->check_events(sf_event, *this, *camera);
 	}
@@ -403,7 +379,13 @@ namespace dim
 
 		// ImGui
 
-		ImGui::SetNextWindowSizeConstraints(ImVec2(50.f, 50.f), ImVec2(100000.f, 100000.f));
+		//TODO: Magic numbers.//
+		ImGui::SetNextWindowSizeConstraints(
+				//ImVec2( parent_window.minium_size.x, parent_window.minium_size.y ), 
+				//ImVec2( parent_window.get_size().x / 2, parent_window.get_size().y / 2 ) 
+					ImVec2(50.f, 50.f), 
+					ImVec2(100000.f, 100000.f)
+				);
 		ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoCollapse;
 
 		ImGui::Begin(name.data(), NULL, window_flags);
@@ -430,12 +412,17 @@ namespace dim
 
 		active = ImGui::IsWindowFocused();
 
-		ImGui::SetCursorPos(ImVec2(8.f, 27.f));
-		ImGui::Image((void*)(intptr_t)frame_buffer.get_texture().get_id(), ImVec2(static_cast<float>(temp.x), static_cast<float>(temp.y)), ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
-		ImGui::SetCursorPos(ImVec2(8.f, 27.f));
-		ImGui::Image((void*)(intptr_t)render_texture.getTexture().getNativeHandle(),
-			ImVec2(static_cast<float>(render_texture.getTexture().getSize().x),
-			static_cast<float>(render_texture.getTexture().getSize().y)), ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
+		//ImGui::SetCursorPos(ImVec2(8.f, 27.f));
+		//ImGui::SetCursorPos( ImGui::GetWindowSize() * 0.5f ); 
+		ImGui::Image(
+					(void*)(intptr_t)frame_buffer.get_texture().get_id(), 
+					ImVec2(static_cast<float>(temp.x), static_cast<float>(temp.y)), 
+					ImVec2(0.f, 1.f), ImVec2(1.f, 0.f)
+				);
+		//ImGui::SetCursorPos(ImVec2(8.f, 27.f));
+		//ImGui::Image((void*)(intptr_t)render_texture.getTexture().getNativeHandle(),
+		//	ImVec2(static_cast<float>(render_texture.getTexture().getSize().x),
+		//	static_cast<float>(render_texture.getTexture().getSize().y)), ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
 
 		ImGui::End();
 
@@ -456,9 +443,9 @@ namespace dim
 			throw std::invalid_argument("This name is already used");
 	}
 
-	void Scene::add(Window& parent_window, const std::string& name)
+	void Scene::add(Window& parent_window, const std::string& name, Vector2int size)
 	{
-		if (!scenes.insert(std::make_pair(name, new Scene(parent_window, name))).second)
+		if (!scenes.insert(std::make_pair(name, new Scene(parent_window, name, size))).second)
 			throw std::invalid_argument("This name is already used");
 
 		get(name).to_delete = true;

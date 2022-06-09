@@ -56,7 +56,7 @@ namespace dim
 		/**
 		 * @brief Construct a new scene.
 		 */
-		Scene(Window& parent_window);
+		Scene(Window& parent_window, std::string name, Vector2int size);
 
 		/**
 		 * @brief Construct a new scene from another.
@@ -65,13 +65,6 @@ namespace dim
 		 */
 		Scene(const Scene& other) = default;
 		Scene(Scene&& other) = default;
-
-		/**
-		 * @brief Construct a new scene.
-		 *
-		 * @param name the name of the scene
-		 */
-		Scene(Window& parent_window, const std::string& name);
 
 		/**
 		 * @brief Delete the scene.
@@ -85,13 +78,6 @@ namespace dim
 		 * @return a reference to the scene
 		 */
 		Scene& operator=(const Scene& other) = default;
-
-		/**
-		 * @brief Initialize an already created scene.
-		 *
-		 * @param name the name of the scene.
-		 */
-		void create(const std::string& name);
 
 		/**
 		 * @brief Check and handle mouse and resize events
@@ -338,7 +324,7 @@ namespace dim
 		 *
 		 * @param name the name of the scene
 		 */
-		static void add(Window& parent_window, const std::string& name);
+		static void add(Window& parent_window, const std::string& name, Vector2int size);
 
 		/**
 		 * @brief Remove a scene from the static scenes container (throw if the name does not exist).

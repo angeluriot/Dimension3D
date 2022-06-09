@@ -2,6 +2,8 @@
 #define DIM_ORBITCONTROLLER_HPP
 
 #include "dim/controllers/Controller.hpp"
+#include "dim/vectors/Vector3.hpp"
+#include "dim/vectors/Vector2.hpp"
 
 namespace dim
 {
@@ -61,6 +63,8 @@ namespace dim
 		 * @return a pointer to the copy
 		 */
 		Controller* clone() const override;
+		void check_events(const sf::Event& sf_event, Camera& camera, bool in_bounds );
+		void update_internal(Camera& camera);
 
 	public:
 

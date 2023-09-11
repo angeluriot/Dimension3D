@@ -48,7 +48,7 @@ namespace dim
 		/**
 		 * @brief Construct a new controller.
 		 */
-		Controller();
+		Controller() = default;
 
 		/**
 		 * @brief Construct a new controller from another.

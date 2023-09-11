@@ -2,8 +2,6 @@
 
 namespace dim
 {
-	Controller::Controller() {}
-
 	float Controller::get_sensitivity() const
 	{
 		return sensitivity;

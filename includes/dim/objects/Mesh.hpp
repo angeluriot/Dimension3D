@@ -58,13 +58,13 @@ namespace dim
 		std::vector<Vector3>	positions;			// The positions data of the mesh.
 		std::vector<Vector3>	normals;			// The normals data of the mesh.
 		std::vector<Vector2>	texcoords;			// The texture coordinates data of the mesh.
-		std::vector<GLuint>     indices;			// The indices data of the mesh.
+		std::vector<GLuint>		indices;			// The indices data of the mesh.
 
 		static const Mesh		circle_64;			// A circle with 64 edges.
 		static const Mesh		empty_circle_64;	// An empty circle with 64 edges.
 		static const Mesh		cone_64;			// A cone with 64 latitudes.
 		static const Mesh		cube;				// A cube.
-		static const Mesh       cubeIndexed;		// An cube with indexed vertices.
+		static const Mesh		cube_indexed;		// An cube with indexed vertices.
 		static const Mesh		empty_cube;			// An empty cube.
 		static const Mesh		cylinder_64;		// A cylinder with 64 latitudes.
 		static const Mesh		null;				// An empty mesh.

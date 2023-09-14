@@ -40,6 +40,8 @@ namespace dim
 
 		delete camera;
 		camera = nullptr;
+
+		clear_lights();
 	}
 
 	Scene& Scene::operator=(const Scene& other)
@@ -47,8 +49,13 @@ namespace dim
 		name = other.name + " (copy)";
 		frame_buffer.create(other.frame_buffer.get_size());
 		render_texture.create(other.render_texture.getSize().x, other.render_texture.getSize().y);
-		controller = other.controller->clone();
-		camera = other.camera->clone();
+
+		if (other.controller != nullptr)
+			set_controller(*other.controller);
+
+		if (other.camera != nullptr)
+			set_camera(*other.camera);
+
 		size = other.size;
 		min = other.min;
 		max = other.max;
@@ -60,7 +67,12 @@ namespace dim
 		shader = other.shader;
 		binded = false;
 		fixed_camera2D = other.fixed_camera2D;
-		lights = other.lights;
+
+		clear_lights();
+
+		for (auto& light : other.lights)
+			add_light(*light);
+
 		post_processing_shader = other.post_processing_shader;
 		post_processing = other.post_processing;
 
@@ -180,6 +192,7 @@ namespace dim
 
 	void Scene::set_camera(const Camera& camera)
 	{
+		delete this->camera;
 		this->camera = camera.clone();
 		(this->camera)->set_resolution(get_size());
 	}
@@ -194,6 +207,7 @@ namespace dim
 
 	void Scene::set_controller(const Controller& controller)
 	{
+		delete this->controller;
 		this->controller = controller.clone();
 	}
 

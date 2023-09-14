@@ -115,6 +115,7 @@ namespace dim
 
 	void Window::set_camera(const Camera& camera)
 	{
+		delete Window::camera;
 		Window::camera = camera.clone();
 		Window::camera->set_resolution(get_size());
 	}
@@ -129,6 +130,7 @@ namespace dim
 
 	void Window::set_controller(const Controller& controller)
 	{
+		delete Window::controller;
 		Window::controller = controller.clone();
 	}
 
@@ -445,6 +447,7 @@ namespace dim
 		controller = nullptr;
 		delete camera;
 		camera = nullptr;
+		clear_lights();
 
 		shut_down();
 		running = false;

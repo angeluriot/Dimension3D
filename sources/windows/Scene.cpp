@@ -50,6 +50,11 @@ namespace dim
 		frame_buffer.create(other.frame_buffer.get_size());
 		render_texture.create(other.render_texture.getSize().x, other.render_texture.getSize().y);
 
+		delete controller;
+		controller = nullptr;
+		delete camera;
+		camera = nullptr;
+
 		if (other.controller != nullptr)
 			set_controller(*other.controller);
 

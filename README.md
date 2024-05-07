@@ -97,7 +97,7 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 
 ### Integrating into your project *(not recommended)*
 
-Link all the **[dependecies](#dependecies)** to your project and compile the **Dimension3D library** as if it was part of your project.
+Link all the **[dependencies](#dependencies)** to your project and compile the **Dimension3D library** as if it was part of your project.
 
 ### Using the skeleton project *(recommended)*
 

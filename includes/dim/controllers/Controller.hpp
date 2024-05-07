@@ -65,6 +65,8 @@ namespace dim
 		 */
 		Controller& operator=(const Controller& other) = default;
 
+    virtual ~Controller() = default;
+
 	protected:
 
 		/**

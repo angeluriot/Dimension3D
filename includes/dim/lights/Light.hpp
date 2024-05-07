@@ -57,6 +57,8 @@ namespace dim
 		 */
 		Light& operator=(const Light& other) = default;
 
+    virtual ~Light() = default;
+
 	protected:
 
 		/**

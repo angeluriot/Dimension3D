@@ -66,6 +66,8 @@ namespace dim
 		 */
 		Camera& operator=(const Camera& other) = default;
 
+    virtual ~Camera() = default;
+
 	protected:
 
 		/**

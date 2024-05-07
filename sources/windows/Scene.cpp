@@ -465,9 +465,9 @@ namespace dim
 		active = ImGui::IsWindowFocused();
 
 		ImGui::SetCursorPos(ImVec2(8.f, 27.f));
-		ImGui::Image(frame_buffer.get_texture().get_id(), ImVec2(static_cast<float>(temp.x), static_cast<float>(temp.y)), ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
+		ImGui::Image((void*)(intptr_t)frame_buffer.get_texture().get_id(), ImVec2(static_cast<float>(temp.x), static_cast<float>(temp.y)), ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
 		ImGui::SetCursorPos(ImVec2(8.f, 27.f));
-		ImGui::Image(render_texture.getTexture().getNativeHandle(),
+		ImGui::Image((void*)(intptr_t)render_texture.getTexture().getNativeHandle(),
 			ImVec2(static_cast<float>(render_texture.getTexture().getSize().x),
 			static_cast<float>(render_texture.getTexture().getSize().y)), ImVec2(0.f, 1.f), ImVec2(1.f, 0.f));
 

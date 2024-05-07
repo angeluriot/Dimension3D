@@ -1,4 +1,4 @@
-# Dimension3D
+# 🧿 Dimension3D
 
 ![Release](https://img.shields.io/badge/Release-v1.0-blueviolet)
 ![Language](https://img.shields.io/badge/Language-C%2B%2B-0052cf)
@@ -17,45 +17,38 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 
 <br>
 
-# Summary
+# 📋 Summary
 
-* **[Summary](#summary)**
-* **[Features](#features)**
-	* [Windows](#windows-)
-	* [2D](#2d-)
-	* [3D](#3d-)
-	* [Simplified OpenGL objects](#simplified-opengl-objects-)
-	* [Utils](#utils-)
-* **[Install](#install)**
-	* [Dependencies](#dependencies)
-		* [Compilers](#compilers-)
-		* [Libraries](#libraries-)
-	* [Integrating into your project](#integrating-into-your-project-not-recommended) *(not recommended)*
-	* [Using the skeleton project](#using-the-skeleton-project-recommended) *(recommended)*
-* **[Demo](#demo)**
-	* [Code example](#code-example)
-	* [Release](#release)
-* **[Documentation](#documentation)**
-* **[Notes](#notes)**
-* **[Credits](#credits)**
+* **[📋 Summary](#-summary)**
+* **[✨ Features](#-features)**
+* **[🛠️ Install](#%EF%B8%8F-install)**
+	* [📦 Dependencies](#-dependencies)
+	* [📥 Integrating into your project](#-integrating-into-your-project-not-recommended) *(not recommended)*
+	* [🦴 Using the skeleton project](#-using-the-skeleton-project-recommended) *(recommended)*
+* **[🖥️ Demo](#%EF%B8%8F-demo)**
+	* [⚙️ Code example](#%EF%B8%8F-code-example)
+	* [🗓️ Releases](#%EF%B8%8F-releases)
+* **[📖 Documentation](#-documentation)**
+* **[📝 Notes](#-notes)**
+* **[🙏 Credits](#-credits)**
 
 <br>
 
-# Features
+# ✨ Features
 
-### Windows :
+### Windows
 
 * Interactive windows with buttons, sliders... *(see **[ImGui](https://github.com/ocornut/imgui)** for more information)*
 
 * Scene windows for display
 
-### 2D :
+### 2D
 
 * Rectangles, circles, custom shapes, images... *(see **[SFML](https://www.sfml-dev.org/)** for more information)* on a scene or the main window
 
 * A drag controller to move the view with the mouse
 
-### 3D :
+### 3D
 
 * Cubes, spheres, cylinders, cones, custom meshes...
 
@@ -67,39 +60,43 @@ This repository contains the source code of a simple graphics library (2D, 3D an
 
 * Drag, fly and orbit controllers
 
-### Simplified OpenGL objects :
+### Simplified OpenGL objects
 
 * Shaders, framebuffers, vertexbuffers, textures...
 
-### Utils :
+### Utils
 
 * Colors, vectors, small functions...
 
 <br>
 
-# Install
+# 🛠️ Install
 
-### Dependencies
+## 📦 Dependencies
 
-* #### Compilers and softwares :
-	* **[CMake](https://cmake.org/)**
-	* **[GCC](https://gcc.gnu.org/)** for **Linux**
-	* **[Clang](https://clang.llvm.org/)** for **MacOS**
-	* **[Visual Studio](https://visualstudio.microsoft.com/)** (the software or the compiler only) for **Windows** *(recommended)*
-	* **[MinGW](https://www.mingw-w64.org/)** for **Windows** *(not recommended)*
+### Compilers and softwares
+* **[CMake](https://cmake.org/)**
+* **[GCC](https://gcc.gnu.org/)** for **Linux**
+* **[Clang](https://clang.llvm.org/)** for **MacOS**
+* **[Visual Studio](https://visualstudio.microsoft.com/)** (the software or the compiler only) for **Windows** *(recommended)*
+* **[MinGW](https://www.mingw-w64.org/)** for **Windows** *(not recommended)*
 
-* #### Libraries :
-	* **[GLM](http://glm.g-truc.net/0.9.6/api/index.html)**
-	* **[GLEW](http://glew.sourceforge.net/)**
-	* **[SFML](https://www.sfml-dev.org/)**
-	* **[ImGui](https://github.com/ocornut/imgui)**
-	* **[ImGui-SFML](https://github.com/eliasdaler/imgui-sfml)**
+### Libraries
+* **[GLM](http://glm.g-truc.net/0.9.6/api/index.html)**
+* **[GLEW](http://glew.sourceforge.net/)**
+* **[SFML](https://www.sfml-dev.org/)**
+* **[ImGui](https://github.com/ocornut/imgui)**
+* **[ImGui-SFML](https://github.com/eliasdaler/imgui-sfml)**
 
-### Integrating into your project *(not recommended)*
+<br>
 
-Link all the **[dependencies](#dependencies)** to your project and compile the **Dimension3D library** as if it was part of your project.
+## 📥 Integrating into your project *(not recommended)*
 
-### Using the skeleton project *(recommended)*
+Link all the **[dependencies](#-dependencies)** to your project and compile the **Dimension3D library** as if it was part of your project.
+
+<br>
+
+## 🦴 Using the skeleton project *(recommended)*
 
 Download the **[skeleton project](https://github.com/angeluriot/Graphics_skeleton)**, delete the **[main.cpp](https://github.com/angeluriot/Graphics_skeleton/blob/master/sources/main.cpp)** demo and put your project files in the **[sources folder](https://github.com/angeluriot/Graphics_skeleton/tree/master/sources)**.
 
@@ -107,9 +104,9 @@ Then follow the instructions of the **skeleton project** **[here](https://github
 
 <br>
 
-# Demo
+# 🖥️ Demo
 
-### Code example
+## ⚙️ Code example
 
 ```cpp
 #include <dim/dimension3D.hpp>
@@ -187,24 +184,26 @@ int main()
 }
 ```
 
-### Release
+<br>
+
+## 🗓️ Releases
 
 You can also see the **[releases](https://github.com/angeluriot/Graphics_skeleton/releases)** of the **[skeleton project](https://github.com/angeluriot/Graphics_skeleton)** to test the example code without compiling.
 
 <br>
 
-# Documentation
+# 📖 Documentation
 
 You can read the documentation by consulting the **[wiki](https://github.com/angeluriot/Dimension3D/wiki)**.
 
 <br>
 
-# Notes
+# 📝 Notes
 
 * This is a small project of a single beginner programmer so there may be bugs if you do not use the library as indicated
 
 <br>
 
-# Credits
+# 🙏 Credits
 
 * [**Angel Uriot**](https://github.com/angeluriot) : Creator of the library.
